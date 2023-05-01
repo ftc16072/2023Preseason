@@ -8,6 +8,7 @@ public abstract class QQtest {
     QQtest(String name) {
         this.name = name;
     }
+
     public abstract void run(boolean on, Telemetry telemetry);
 
 
