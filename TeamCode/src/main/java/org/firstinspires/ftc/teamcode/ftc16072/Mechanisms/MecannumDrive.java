@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.ftc16072.Util.Polar;
 
 public class MecannumDrive {
     DcMotor BackLeftMotor;
@@ -15,6 +17,7 @@ public class MecannumDrive {
     DcMotor FrontRightMotor;
     DcMotor FrontLeftMotor;
     BNO055IMU imu;
+    Polar drive;
 
     public void init(HardwareMap HwMap){
         imu = HwMap.get(BNO055IMU.class, "imu");
@@ -27,27 +30,39 @@ public class MecannumDrive {
         FrontRightMotor = HwMap.get(DcMotor.class, "front_right_motor");
         FrontLeftMotor = HwMap.get(DcMotor.class, "front_left_motor");
 
-        BackLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BackRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        FrontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        FrontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
         FrontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         BackLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
-    public void convert_to_field(double forward, double right, double rotate){
+    void convert_to_field(double forward, double right, double rotate){
+        Orientation angle;
+        angle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+        double heading = angle.firstAngle;
 
-        double heading = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle;
-        double angle = right/forward;
-        double field_forward = (Math.cos(angle)*forward);
 
-        // do all the math then call drive function
+        Polar drive = new Polar(right, forward);
+        drive.rotate(-heading, AngleUnit.RADIANS);
+        move(drive.getY(),drive.getX(),rotate);
+
+
+
 
     }
-    public void drive(double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower){
+
+
+
+    void move(double forward, double right, double rotate){
+
+
+        double frontLeftPower = forward + right + rotate;
+        double frontRightPower = forward - right - rotate;
+        double backRightPower = forward + right - rotate;
+        double backLeftPower = forward - right + rotate;
+
         double maxSpeed = 1.0;
+
         maxSpeed = Math.max(maxSpeed, Math.abs(frontLeftPower));
         maxSpeed = Math.max(maxSpeed, Math.abs(frontRightPower));
         maxSpeed = Math.max(maxSpeed, Math.abs(backLeftPower));
@@ -68,8 +83,4 @@ public class MecannumDrive {
     }
 
 
-    public void loop(){
-
-
-    }
 }
