@@ -22,7 +22,7 @@ public class TestMotor extends QQtest {
 
 
     public void run(boolean on, Telemetry telemetry){
-        if (on=true){
+        if (on){
             motor.setPower(speed);
         }
         else{
