@@ -17,8 +17,8 @@ public class Navigation {
         double heading = gyro.getHeading(AngleUnit.RADIANS);
 
         Polar drive = new Polar(right, forward);
-        drive.rotate(heading, AngleUnit.RADIANS);
+        drive.rotate(-heading, AngleUnit.RADIANS);
 
-        mecanumDrive.move(forward, right, rotate);
+        mecanumDrive.move(drive.getY(), drive.getX(), rotate);
     }
 }

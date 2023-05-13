@@ -42,6 +42,6 @@ public class Gyro implements Mechanism{
 
     public double getHeading(AngleUnit angleUnit){
         YawPitchRollAngles angles = gyro.getRobotYawPitchRollAngles();
-        return angles.getPitch(angleUnit);
+        return angles.getYaw(angleUnit);
     }
 }
