@@ -10,8 +10,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.ftc16072.QQTest.QQtest;
+import org.firstinspires.ftc.teamcode.ftc16072.QQTest.TestMotor;
 import org.firstinspires.ftc.teamcode.ftc16072.Util.Polar;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class MecanumDrive implements Mechanism{
@@ -20,30 +22,22 @@ public class MecanumDrive implements Mechanism{
     DcMotor frontRightMotor;
     DcMotor frontLeftMotor;
 
-    BNO055IMU imu;
-    Polar drive;
-
     public void init(HardwareMap HwMap){
-        imu = HwMap.get(BNO055IMU.class, "imu");
-        BNO055IMU.Parameters params = new BNO055IMU.Parameters(); // might want to eventually make a seperate gyro class
-        params.calibrationDataFile = "BNO055IMUCalibration.json";
-        imu.initialize(params);
-
         backLeftMotor = HwMap.get(DcMotor.class, "back_left_motor");
         backRightMotor = HwMap.get(DcMotor.class, "back_right_motor");
         frontRightMotor = HwMap.get(DcMotor.class, "front_right_motor");
         frontLeftMotor = HwMap.get(DcMotor.class, "front_left_motor");
 
-
-
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
     }
 
     @Override
     public List<QQtest> getTests() {
-        return null;
+        return Arrays.asList(new TestMotor("Back Left", 0.2, backLeftMotor),
+                             new TestMotor("Back Right", 0.2, backRightMotor),
+                             new TestMotor("Front Left", 0.2, frontLeftMotor),
+                             new TestMotor("Front Right", 0.2, frontRightMotor));
     }
 
     @Override
@@ -51,26 +45,7 @@ public class MecanumDrive implements Mechanism{
         return "MecanumDrive";
     }
 
-    void convert_to_field(double forward, double right, double rotate){
-        Orientation angle;
-        angle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-        double heading = angle.firstAngle;
-
-
-        Polar drive = new Polar(right, forward);
-        drive.rotate(-heading, AngleUnit.RADIANS);
-        move(drive.getY(),drive.getX(),rotate);
-
-
-
-
-    }
-
-
-
-    void move(double forward, double right, double rotate){
-
-
+    public void move(double forward, double right, double rotate){
         double frontLeftPower = forward + right + rotate;
         double frontRightPower = forward - right - rotate;
         double backRightPower = forward + right - rotate;
@@ -92,9 +67,6 @@ public class MecanumDrive implements Mechanism{
         frontRightMotor.setPower(frontRightPower);
         backLeftMotor.setPower(backLeftPower);
         backRightMotor.setPower(backRightPower);
-
-
-
     }
 
 

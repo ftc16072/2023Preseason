@@ -4,6 +4,8 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.ftc16072.QQTest.QQtest;
 import org.firstinspires.ftc.teamcode.ftc16072.QQTest.TestGyro;
 
@@ -36,5 +38,10 @@ public class Gyro implements Mechanism{
     @Override
     public String getName() {
         return "gyro";
+    }
+
+    public double getHeading(AngleUnit angleUnit){
+        YawPitchRollAngles angles = gyro.getRobotYawPitchRollAngles();
+        return angles.getPitch(angleUnit);
     }
 }
