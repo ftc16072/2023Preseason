@@ -1,22 +1,36 @@
 package org.firstinspires.ftc.teamcode.ftc16072;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.Gyro;
+import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.MecanumDrive;
 import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.Mechanism;
-import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.Motor;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class Robot {
-    public Motor motor = new Motor();
+    List<Mechanism> mechanisms;
+    MecanumDrive mecanumDrive;
+    Gyro gyro;
 
-    List<Mechanism> Mechanisms = Arrays.asList(
-            motor
+    public Robot(){
+        mecanumDrive = new MecanumDrive();
+        gyro = new Gyro();
 
+        mechanisms = Arrays.asList(
+                mecanumDrive,
+                gyro);
+    }
 
-    );
+    void init(HardwareMap hwMap){
+        for (Mechanism mechanism : mechanisms) {
+            mechanism.init(hwMap);
+        }
+    }
 
-    public List getMechanismList(){
-        return (Mechanisms);
+    public List<Mechanism> getMechanismList(){
+        return mechanisms;
     }
 
 

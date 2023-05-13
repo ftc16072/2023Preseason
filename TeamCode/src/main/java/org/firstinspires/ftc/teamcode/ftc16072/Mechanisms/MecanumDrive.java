@@ -9,9 +9,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.ftc16072.QQTest.QQtest;
 import org.firstinspires.ftc.teamcode.ftc16072.Util.Polar;
 
-public class MecannumDrive {
+import java.util.List;
+
+public class MecanumDrive implements Mechanism{
     DcMotor BackLeftMotor;
     DcMotor BackRightMotor;
     DcMotor FrontRightMotor;
@@ -36,6 +39,17 @@ public class MecannumDrive {
         BackLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
+
+    @Override
+    public List<QQtest> getTests() {
+        return null;
+    }
+
+    @Override
+    public String getName() {
+        return "MecanumDrive";
+    }
+
     void convert_to_field(double forward, double right, double rotate){
         Orientation angle;
         angle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
