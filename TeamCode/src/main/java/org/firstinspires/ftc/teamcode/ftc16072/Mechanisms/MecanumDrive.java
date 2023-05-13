@@ -15,10 +15,11 @@ import org.firstinspires.ftc.teamcode.ftc16072.Util.Polar;
 import java.util.List;
 
 public class MecanumDrive implements Mechanism{
-    DcMotor BackLeftMotor;
-    DcMotor BackRightMotor;
-    DcMotor FrontRightMotor;
-    DcMotor FrontLeftMotor;
+    DcMotor backLeftMotor;
+    DcMotor backRightMotor;
+    DcMotor frontRightMotor;
+    DcMotor frontLeftMotor;
+
     BNO055IMU imu;
     Polar drive;
 
@@ -28,15 +29,15 @@ public class MecanumDrive implements Mechanism{
         params.calibrationDataFile = "BNO055IMUCalibration.json";
         imu.initialize(params);
 
-        BackLeftMotor = HwMap.get(DcMotor.class, "back_left_motor");
-        BackRightMotor = HwMap.get(DcMotor.class, "back_right_motor");
-        FrontRightMotor = HwMap.get(DcMotor.class, "front_right_motor");
-        FrontLeftMotor = HwMap.get(DcMotor.class, "front_left_motor");
+        backLeftMotor = HwMap.get(DcMotor.class, "back_left_motor");
+        backRightMotor = HwMap.get(DcMotor.class, "back_right_motor");
+        frontRightMotor = HwMap.get(DcMotor.class, "front_right_motor");
+        frontLeftMotor = HwMap.get(DcMotor.class, "front_left_motor");
 
 
 
-        FrontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        BackLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
 
@@ -87,10 +88,10 @@ public class MecanumDrive implements Mechanism{
         backLeftPower /= maxSpeed;
         backRightPower /= maxSpeed;
 
-        FrontLeftMotor.setPower(frontLeftPower);
-        FrontRightMotor.setPower(frontRightPower);
-        BackLeftMotor.setPower(backLeftPower);
-        BackRightMotor.setPower(backRightPower);
+        frontLeftMotor.setPower(frontLeftPower);
+        frontRightMotor.setPower(frontRightPower);
+        backLeftMotor.setPower(backLeftPower);
+        backRightMotor.setPower(backRightPower);
 
 
 
