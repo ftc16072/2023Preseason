@@ -47,7 +47,7 @@ public class Polar {
     }
 
     public void scaleR(double scale) {
-        r *= scale;
+        set(theta, r * scale);
     }
 
 
