@@ -6,19 +6,8 @@ import org.firstinspires.ftc.teamcode.ftc16072.QQTest.QQtest;
 
 import java.util.List;
 
-public abstract class Mechanism {
-    public abstract void init(HardwareMap hwMap);
-
-    public abstract List <QQtest> getTests();
-
-    public String toString() {
-        return this.getClass().getSimpleName();
-    }
-
-
-
-
-
-
-
+public interface Mechanism {
+    void init(HardwareMap hwMap);
+    List <QQtest> getTests();
+    String getName();
 }
