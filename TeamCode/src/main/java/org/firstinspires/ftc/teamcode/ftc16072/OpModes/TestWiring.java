@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.ftc16072.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.Mechanism;
 import org.firstinspires.ftc.teamcode.ftc16072.QQTest.QQtest;
@@ -19,6 +20,7 @@ public class TestWiring extends OpMode {
 
 
     public void init(){
+        robot.init(hardwareMap);
         mechanismList = robot.getMechanismList();
 
     }
@@ -39,7 +41,7 @@ public class TestWiring extends OpMode {
         }
         else if (gamepad1.dpad_down){ // possible failure point
             if (currentMechanism <= 0){
-                currentMechanism = mechanismList.size();
+                currentMechanism = mechanismList.size()-1;
 
             }
             else{
@@ -61,7 +63,7 @@ public class TestWiring extends OpMode {
 
         else if (gamepad1.dpad_left){
             if (currentTest<=0){
-                currentTest = testList.size();
+                currentTest = testList.size()-1;
             }
             else{
                 currentTest = currentTest - 1;
