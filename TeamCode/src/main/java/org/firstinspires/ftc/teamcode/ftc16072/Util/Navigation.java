@@ -4,9 +4,12 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.control.PIDFController;
+import com.acmerobotics.roadrunner.drive.DriveSignal;
 import com.acmerobotics.roadrunner.followers.HolonomicPIDVAFollower;
 import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.trajectory.constraints.AngularVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationConstraint;
@@ -77,4 +80,17 @@ public class Navigation extends com.acmerobotics.roadrunner.drive.MecanumDrive{
     public void setMotorPowers(double v, double v1, double v2, double v3) {
         mecanumDrive.setPowers(v, v3, v1, v2);
     }
+
+    public TrajectoryBuilder trajectoryBuilder(Pose2d startPose, Boolean reversed){
+        return new TrajectoryBuilder(startPose, reversed, velocityConstraint, accelConstraint);
+    }
+    public boolean isDoneFollowing(Pose2d currentPose){
+        setDriveSignal(follower.update(currentPose));
+        if(!follower.isFollowing()){
+            setDriveSignal(new DriveSignal());
+            return true;
+        }
+        return false;
+    }
+
 }
