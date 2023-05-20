@@ -24,7 +24,12 @@ public class MecanumDrive implements Mechanism {
     public static final double MAX_RPM = 133.9;
     public static final double WHEEL_DIAM_IN = 4;
     public static final double TRACK_WIDTH_IN = 18;
-    public static final double MAX_VELOCITY = MAX_RPM * Math.PI * WHEEL_DIAM_IN / SECS_PER_MIN;
+    public static final double MAX_MOTOR_VELOCITY = MAX_RPM * Math.PI * WHEEL_DIAM_IN / SECS_PER_MIN;
+
+    public static double MAX_VELOCITY = 30;
+    public static double MAX_ACCELERATION = 60;
+    public static double MAX_ANGULAR_VELOCITY = Math.PI;
+    public static double MAX_ANGULAR_ACCELERATION = Math.PI;
 
 
     public void init(HardwareMap HwMap) {

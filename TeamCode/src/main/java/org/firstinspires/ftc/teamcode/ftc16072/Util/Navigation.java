@@ -27,15 +27,15 @@ public class Navigation extends com.acmerobotics.roadrunner.drive.MecanumDrive{
 
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(1, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(1,0,0);
-    public static double kV = 1.0 / MecanumDrive.MAX_VELOCITY;
+    public static double kV = 1.0 / MecanumDrive.MAX_MOTOR_VELOCITY;
     public static double kA = 0.0;
     public static double kStatic = 0;
 
     public TrajectoryVelocityConstraint velocityConstraint = new MinVelocityConstraint(Arrays.asList(
-            new AngularVelocityConstraint(60),
-            new TranslationalVelocityConstraint(25)
+            new AngularVelocityConstraint(MecanumDrive.MAX_ANGULAR_VELOCITY),
+            new TranslationalVelocityConstraint(MecanumDrive.MAX_VELOCITY)
     ));
-    public TrajectoryAccelerationConstraint accelConstraint = new ProfileAccelerationConstraint(25);
+    public TrajectoryAccelerationConstraint accelConstraint = new ProfileAccelerationConstraint(MecanumDrive.MAX_ACCELERATION);
     private PIDFController turnController;
     public TrajectoryFollower follower;
 
