@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive implements Mechanism{
+public class MecanumDrive implements Mechanism{
     DcMotor backLeftMotor;
     DcMotor backRightMotor;
     DcMotor frontRightMotor;
@@ -34,37 +34,14 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
     public static final double SECS_PER_MIN = 60.0;
 
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(1, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(1,0,0);
-    // depending on drive motor
+       // depending on drive motor
     public static final double TICKS_PER_REV = 1120;
     public static final double MAX_RPM = 133.9;
     public static final double WHEEL_DIAM_IN = 4;
     public static final double TRACK_WIDTH_IN = 18;
     public static final double MAX_VELOCITY = MAX_RPM * Math.PI * WHEEL_DIAM_IN/ SECS_PER_MIN;
 
-    public static double kV = 1.0 / MAX_VELOCITY;
-    public static double kA = 0.0;
-    public static double kStatic = 0;
 
-    public TrajectoryVelocityConstraint velocityConstraint = new MinVelocityConstraint(Arrays.asList(
-            new AngularVelocityConstraint(60),
-            new TranslationalVelocityConstraint(25)
-    ));
-    public TrajectoryAccelerationConstraint accelConstraint = new ProfileAccelerationConstraint(25);
-    private PIDFController turnController;
-    public TrajectoryFollower follower;
-
-    private Gyro gyro;
-
-    public MecanumDrive(Gyro gyro){
-        super(kV,kA,kStatic,TRACK_WIDTH_IN);
-        this.gyro = gyro;
-        turnController = new PIDFController(HEADING_PID);
-        turnController.setInputBounds(0,2 * Math.PI);
-        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID,HEADING_PID,
-                new Pose2d(0.5,0.5,Math.toRadians(5.0)),0.5);
-    }
 
     public void init(HardwareMap HwMap){
         backLeftMotor = HwMap.get(DcMotor.class, "back_left_motor");
@@ -104,7 +81,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         setPowers(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
     }
 
-    private void setPowers(double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower){
+    public void setPowers(double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower){
         double maxSpeed = 1.0;
 
         maxSpeed = Math.max(maxSpeed, Math.abs(frontLeftPower));
@@ -124,17 +101,11 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     }
 
 
-    @Override
-    protected double getRawExternalHeading() {
-        return gyro.getHeading(AngleUnit.RADIANS);
-    }
 
     private double ticksToInches(double ticks){
         return WHEEL_DIAM_IN * Math.PI * ticks / TICKS_PER_REV;
     }
 
-    @NonNull
-    @Override
     public List<Double> getWheelPositions() {
         List<Double> wheelPositions = new ArrayList<>();
         wheelPositions.add(ticksToInches(frontLeftMotor.getCurrentPosition()));
@@ -144,8 +115,5 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         return wheelPositions;
     }
 
-    @Override
-    public void setMotorPowers(double v, double v1, double v2, double v3) {
-        setPowers(v, v3, v1, v2);
-    }
+
 }

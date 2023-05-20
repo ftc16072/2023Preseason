@@ -33,41 +33,41 @@ public class RoadRunnerTest extends OpMode {
 
     @Override
     public void loop() {
-        robot.mecanumDrive.updatePoseEstimate();
-        Pose2d currentPose = robot.mecanumDrive.getPoseEstimate();
+        robot.nav.updatePoseEstimate();
+        Pose2d currentPose = robot.nav.getPoseEstimate();
 
         telemetry.addData("STATE",state);
         telemetry.addData("POSE","x = %.2f y = %.2f h = %.1f", currentPose.getX(),currentPose.getY(),Math.toDegrees(currentPose.getHeading()));
         switch(state){
             case BEGIN:
                 state = State.AWAY;
-                trajectory = new TrajectoryBuilder(new Pose2d(),false,robot.mecanumDrive.velocityConstraint,robot.mecanumDrive.accelConstraint)
+                trajectory = new TrajectoryBuilder(new Pose2d(),false,robot.nav.velocityConstraint,robot.nav.accelConstraint)
                         .splineTo(new Vector2d(30,30),0)
                         .build();
-                robot.mecanumDrive.follower.followTrajectory(trajectory);
+                robot.nav.follower.followTrajectory(trajectory);
                 break;
             case AWAY:
-                robot.mecanumDrive.setDriveSignal(robot.mecanumDrive.follower.update(currentPose));
-                if (!robot.mecanumDrive.follower.isFollowing()){
+                robot.nav.setDriveSignal(robot.nav.follower.update(currentPose));
+                if (!robot.nav.follower.isFollowing()){
                     state = State.PAUSE;
-                    robot.mecanumDrive.setDriveSignal(new DriveSignal());
+                    robot.nav.setDriveSignal(new DriveSignal());
                     startPause = clock.seconds();
                 }
                 break;
             case PAUSE:
                 if ((clock.seconds() - startPause) > 2.0){
                     state =State.RETURN;
-                    trajectory = new TrajectoryBuilder(new Pose2d(30,30,0),true,robot.mecanumDrive.velocityConstraint,robot.mecanumDrive.accelConstraint)
+                    trajectory = new TrajectoryBuilder(new Pose2d(30,30,0),true,robot.nav.velocityConstraint,robot.nav.accelConstraint)
                             .splineTo(new Vector2d(0,0),Math.toRadians(180))
                             .build();
-                    robot.mecanumDrive.follower.followTrajectory(trajectory);
+                    robot.nav.follower.followTrajectory(trajectory);
                 }
                 break;
             case RETURN:
-                robot.mecanumDrive.setDriveSignal(robot.mecanumDrive.follower.update(currentPose));
-                if(!robot.mecanumDrive.follower.isFollowing()){
+                robot.nav.setDriveSignal(robot.nav.follower.update(currentPose));
+                if(!robot.nav.follower.isFollowing()){
                     state = State.DONE;
-                    robot.mecanumDrive.setDriveSignal(new DriveSignal());
+                    robot.nav.setDriveSignal(new DriveSignal());
                 }
                 break;
             case DONE:
