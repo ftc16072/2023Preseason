@@ -12,13 +12,13 @@ import java.util.List;
 
 public class Robot {
     List<Mechanism> mechanisms;
-    MecanumDrive mecanumDrive;
+    public MecanumDrive mecanumDrive;
     Gyro gyro;
     public Navigation nav;
 
     public Robot(){
-        mecanumDrive = new MecanumDrive();
         gyro = new Gyro();
+        mecanumDrive = new MecanumDrive(gyro);
         nav = new Navigation(gyro, mecanumDrive);
 
         mechanisms = Arrays.asList(
