@@ -1,24 +1,9 @@
 package org.firstinspires.ftc.teamcode.ftc16072.Mechanisms;
 
-import androidx.annotation.NonNull;
-
-import com.acmerobotics.roadrunner.control.PIDFController;
-import com.acmerobotics.roadrunner.followers.HolonomicPIDVAFollower;
-import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.constraints.AngularVelocityConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.TranslationalVelocityConstraint;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.acmerobotics.roadrunner.control.PIDCoefficients;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.teamcode.ftc16072.QQTest.QQtest;
 import org.firstinspires.ftc.teamcode.ftc16072.QQTest.TestMotor;
 
@@ -26,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive implements Mechanism{
+public class MecanumDrive implements Mechanism {
     DcMotor backLeftMotor;
     DcMotor backRightMotor;
     DcMotor frontRightMotor;
@@ -34,39 +19,20 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
     public static final double SECS_PER_MIN = 60.0;
 
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(1, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(1,0,0);
     // depending on drive motor
     public static final double TICKS_PER_REV = 1120;
     public static final double MAX_RPM = 133.9;
     public static final double WHEEL_DIAM_IN = 4;
     public static final double TRACK_WIDTH_IN = 18;
-    public static final double MAX_VELOCITY = MAX_RPM * Math.PI * WHEEL_DIAM_IN/ SECS_PER_MIN;
+    public static final double MAX_MOTOR_VELOCITY = MAX_RPM * Math.PI * WHEEL_DIAM_IN / SECS_PER_MIN;
 
-    public static double kV = 1.0 / MAX_VELOCITY;
-    public static double kA = 0.0;
-    public static double kStatic = 0;
+    public static double MAX_VELOCITY = 30;
+    public static double MAX_ACCELERATION = 60;
+    public static double MAX_ANGULAR_VELOCITY = Math.PI;
+    public static double MAX_ANGULAR_ACCELERATION = Math.PI;
 
-    public TrajectoryVelocityConstraint velocityConstraint = new MinVelocityConstraint(Arrays.asList(
-            new AngularVelocityConstraint(60),
-            new TranslationalVelocityConstraint(25)
-    ));
-    public TrajectoryAccelerationConstraint accelConstraint = new ProfileAccelerationConstraint(25);
-    private PIDFController turnController;
-    public TrajectoryFollower follower;
 
-    private Gyro gyro;
-
-    public MecanumDrive(Gyro gyro){
-        super(kV,kA,kStatic,TRACK_WIDTH_IN);
-        this.gyro = gyro;
-        turnController = new PIDFController(HEADING_PID);
-        turnController.setInputBounds(0,2 * Math.PI);
-        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID,HEADING_PID,
-                new Pose2d(0.5,0.5,Math.toRadians(5.0)),0.5);
-    }
-
-    public void init(HardwareMap HwMap){
+    public void init(HardwareMap HwMap) {
         backLeftMotor = HwMap.get(DcMotor.class, "back_left_motor");
         backRightMotor = HwMap.get(DcMotor.class, "back_right_motor");
         frontRightMotor = HwMap.get(DcMotor.class, "front_right_motor");
@@ -76,7 +42,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         List<DcMotor> motors = Arrays.asList(backLeftMotor, backRightMotor, frontRightMotor, frontLeftMotor);
-        for(DcMotor motor : motors){
+        for (DcMotor motor : motors) {
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
@@ -85,9 +51,9 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     @Override
     public List<QQtest> getTests() {
         return Arrays.asList(new TestMotor("Back Left", 0.2, backLeftMotor),
-                             new TestMotor("Back Right", 0.2, backRightMotor),
-                             new TestMotor("Front Left", 0.2, frontLeftMotor),
-                             new TestMotor("Front Right", 0.2, frontRightMotor));
+                new TestMotor("Back Right", 0.2, backRightMotor),
+                new TestMotor("Front Left", 0.2, frontLeftMotor),
+                new TestMotor("Front Right", 0.2, frontRightMotor));
     }
 
     @Override
@@ -95,7 +61,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         return "MecanumDrive";
     }
 
-    public void move(double forward, double right, double rotate){
+    public void move(double forward, double right, double rotate) {
         double frontLeftPower = forward + right + rotate;
         double frontRightPower = forward - right - rotate;
         double backRightPower = forward + right - rotate;
@@ -104,7 +70,7 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         setPowers(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
     }
 
-    private void setPowers(double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower){
+    public void setPowers(double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower) {
         double maxSpeed = 1.0;
 
         maxSpeed = Math.max(maxSpeed, Math.abs(frontLeftPower));
@@ -124,17 +90,10 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     }
 
 
-    @Override
-    protected double getRawExternalHeading() {
-        return gyro.getHeading(AngleUnit.RADIANS);
-    }
-
-    private double ticksToInches(double ticks){
+    private double ticksToInches(double ticks) {
         return WHEEL_DIAM_IN * Math.PI * ticks / TICKS_PER_REV;
     }
 
-    @NonNull
-    @Override
     public List<Double> getWheelPositions() {
         List<Double> wheelPositions = new ArrayList<>();
         wheelPositions.add(ticksToInches(frontLeftMotor.getCurrentPosition()));
@@ -144,8 +103,5 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         return wheelPositions;
     }
 
-    @Override
-    public void setMotorPowers(double v, double v1, double v2, double v3) {
-        setPowers(v, v3, v1, v2);
-    }
+
 }
