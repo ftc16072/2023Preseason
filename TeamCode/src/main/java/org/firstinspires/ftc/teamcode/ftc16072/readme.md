@@ -8,3 +8,4 @@ Please add your name (first name and last initial) so we know your privileges al
 * Arnav Chauhan
 * Shreyas Thota
 * Mahin Waghray
+* Swayam S
