@@ -9,3 +9,4 @@ Please add your name (first name and last initial) so we know your privileges al
 * Shreyas Thota
 * Mahin Waghray
 * Swayam S
+* Krithin V
