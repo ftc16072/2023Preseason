@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.ftc16072;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.Claw;
 import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.Gyro;
 import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.MecanumDrive;
 import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.Mechanism;
@@ -15,15 +16,18 @@ public class Robot {
     public MecanumDrive mecanumDrive;
     Gyro gyro;
     public Navigation nav;
+    public Claw claw;
 
     public Robot(){
         gyro = new Gyro();
         mecanumDrive = new MecanumDrive();
         nav = new Navigation(gyro, mecanumDrive);
+        claw = new Claw();
 
         mechanisms = Arrays.asList(
                         mecanumDrive,
-                        gyro
+                        gyro,
+                        claw
         );
     }
 
