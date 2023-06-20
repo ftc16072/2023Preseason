@@ -5,42 +5,51 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.ftc16072.QQTest.QQtest;
 
+import java.util.Hashtable;
 import java.util.List;
+import java.util.logging.Handler;
 
 public class HorizontalSlides implements Mechanism{
+    public enum Position {
+        BACK,
+        MIDDLE,
+        FRONT
+    }
+    Hashtable<Position, Double> positions = new Hashtable<>();
+
+
+
     public Servo HorizontalSlide;
-    public final double BACK_SERVO_POSITION= 1; // preset values need to be tuned
-    public final double MIDDLE_SERVO_POSITION = 1;
+    public final double BACK_SERVO_POSITION = 0.125; // preset values need to be tuned
+    public final double MIDDLE_SERVO_POSITION = 0.475;
     public final double FRONT_SERVO_POSITION = 1;
 
+    private void fillPositions(Position position){
+        positions.clear();
+        positions.put(Position.BACK, BACK_SERVO_POSITION);
+        positions.put(Position.MIDDLE, MIDDLE_SERVO_POSITION);
+        positions.put(Position.FRONT, FRONT_SERVO_POSITION);
+    }
 
-
-
-    /*
-    goto (back, middle, front)
-
-
-    manual forward and backward
-     */
     @Override
     public void init(HardwareMap hwMap) {
         HorizontalSlide = hwMap.get(Servo.class, "horizontal_slide");
 
-
     }
 
     public void manualForward(){
-        //
-        HorizontalSlide.setPosition();
+        HorizontalSlide.setPosition(HorizontalSlide.getPosition()+1);
+
     }
 
     public void manualBackward(){
+        HorizontalSlide.setPosition(HorizontalSlide.getPosition()-1);
 
     }
 
-    public void goToPosition(double position){
-
-        HorizontalSlide.setPosition(position);
+    public void goToPosition(Position position){ // uses preset positions
+        double desiredPosition = positions.get(position);
+        HorizontalSlide.setPosition(desiredPosition);
 
     }
 
