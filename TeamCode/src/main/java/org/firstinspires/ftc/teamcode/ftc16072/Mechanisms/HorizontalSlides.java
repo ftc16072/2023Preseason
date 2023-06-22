@@ -16,12 +16,12 @@ public class HorizontalSlides implements Mechanism{
         FRONT
     }
     Hashtable<Position, Double> positions = new Hashtable<>();
-
+    Position presets;
 
 
     public Servo HorizontalSlide;
-    public final double BACK_SERVO_POSITION = 0.125; // preset values need to be tuned
-    public final double MIDDLE_SERVO_POSITION = 0.475;
+    public final double BACK_SERVO_POSITION = 0.473; // preset values need to be tuned
+    public final double MIDDLE_SERVO_POSITION = 0.757;
     public final double FRONT_SERVO_POSITION = 1;
 
     private void fillPositions(Position position){
@@ -33,24 +33,37 @@ public class HorizontalSlides implements Mechanism{
 
     @Override
     public void init(HardwareMap hwMap) {
-        HorizontalSlide = hwMap.get(Servo.class, "horizontal_slide");
+        HorizontalSlide = hwMap.get(Servo.class,  "horizontal");
+        fillPositions(presets);
 
     }
 
     public void manualForward(){
-        HorizontalSlide.setPosition(HorizontalSlide.getPosition()+1);
+        if (HorizontalSlide.getPosition()+0.003<=1){
+            HorizontalSlide.setPosition(HorizontalSlide.getPosition()+0.003);
+
+        }
 
     }
 
     public void manualBackward(){
-        HorizontalSlide.setPosition(HorizontalSlide.getPosition()-1);
+        if (HorizontalSlide.getPosition()-0.003>=0.473){
+            HorizontalSlide.setPosition(HorizontalSlide.getPosition()-0.003);
+        }
 
+
+    }
+    public void stop(){
+        HorizontalSlide.setPosition(HorizontalSlide.getPosition());
     }
 
     public void goToPosition(Position position){ // uses preset positions
         double desiredPosition = positions.get(position);
         HorizontalSlide.setPosition(desiredPosition);
 
+    }
+    public double currentPosition(){
+        return HorizontalSlide.getPosition();
     }
 
     @Override

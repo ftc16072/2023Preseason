@@ -20,30 +20,31 @@ public class horizontalSlidesTesting extends OpMode {
 
     @Override
     public void loop() {
-        /*
+
         if (gamepad1.dpad_up){
-            robot.horizontalSlides.goToPosition(HorizontalSlides.Position.BACK);
+            robot.horizontalSlides.goToPosition(HorizontalSlides.Position.FRONT);
 
         }
         if (gamepad1.dpad_left){
-            robot.horizontalSlides.goToPosition(HorizontalSlides.Position.FRONT);
+            robot.horizontalSlides.goToPosition(HorizontalSlides.Position.MIDDLE);
         }
 
 
         if (gamepad1.dpad_down){
-            robot.horizontalSlides.goToPosition(HorizontalSlides.Position.FRONT);
+            robot.horizontalSlides.goToPosition(HorizontalSlides.Position.BACK);
 
         }
 
-         */
 
-        if (gamepad2.dpad_down){
+        telemetry.addData("currentposition", robot.horizontalSlides.currentPosition());
+
+        if (gamepad1.left_stick_x>0){
             robot.horizontalSlides.manualBackward();
         } else {
             robot.horizontalSlides.stop();
         }
 
-        if (gamepad2.dpad_up){
+        if (gamepad1.left_stick_x<0){
             robot.horizontalSlides.manualForward();
         } else {
             robot.horizontalSlides.stop();
