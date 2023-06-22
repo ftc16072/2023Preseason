@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.ftc16072.Mechanisms;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -52,10 +51,11 @@ public class Claw implements Mechanism{
     }
 
     public void manualClose(){
-        if(CorrectColor()){
-        claw.setPosition(GRIPPED_SERVO_POSITION);
-    }
-    else{gamepad1.rumble(10);}
+        if(CorrectColor()) {
+            claw.setPosition(GRIPPED_SERVO_POSITION);
+        }
+    /*}
+    else{gamepad1.rumble(10);}*/
     }
     public void manualOpen(){
         claw.setPosition(RELEASED_SERVO_POSITION);
