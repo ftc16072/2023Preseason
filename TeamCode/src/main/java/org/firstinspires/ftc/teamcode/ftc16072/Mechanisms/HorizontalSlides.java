@@ -39,16 +39,16 @@ public class HorizontalSlides implements Mechanism{
     }
 
     public void manualForward(){
-        if (HorizontalSlide.getPosition()+0.003<=1){
-            HorizontalSlide.setPosition(HorizontalSlide.getPosition()+0.003);
+        if (HorizontalSlide.getPosition()+0.001<=1){
+            HorizontalSlide.setPosition(HorizontalSlide.getPosition()+0.001);
 
         }
 
     }
 
     public void manualBackward(){
-        if (HorizontalSlide.getPosition()-0.003>=0.473){
-            HorizontalSlide.setPosition(HorizontalSlide.getPosition()-0.003);
+        if (HorizontalSlide.getPosition()-0.001>=0.473){
+            HorizontalSlide.setPosition(HorizontalSlide.getPosition()-0.001);
         }
 
 
@@ -57,9 +57,6 @@ public class HorizontalSlides implements Mechanism{
         HorizontalSlide.setPosition(HorizontalSlide.getPosition());
     }
 
-    public void stop(){
-        HorizontalSlide.setPosition(HorizontalSlide.getPosition());
-    }
 
     public void goToPosition(Position position){ // uses preset positions
         double desiredPosition = positions.get(position);
