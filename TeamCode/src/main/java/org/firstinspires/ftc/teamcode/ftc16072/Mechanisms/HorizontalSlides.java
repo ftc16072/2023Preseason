@@ -57,6 +57,10 @@ public class HorizontalSlides implements Mechanism{
         HorizontalSlide.setPosition(HorizontalSlide.getPosition());
     }
 
+    public void stop(){
+        HorizontalSlide.setPosition(HorizontalSlide.getPosition());
+    }
+
     public void goToPosition(Position position){ // uses preset positions
         double desiredPosition = positions.get(position);
         HorizontalSlide.setPosition(desiredPosition);
