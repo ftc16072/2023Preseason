@@ -37,13 +37,13 @@ public class horizontalSlidesTesting extends OpMode {
 
          */
 
-        if (gamepad2.dpad_down){
+        if (gamepad2.left_stick_x<0){
             robot.horizontalSlides.manualBackward();
         } else {
             robot.horizontalSlides.stop();
         }
 
-        if (gamepad2.dpad_up){
+        if (gamepad2.left_stick_x>0){
             robot.horizontalSlides.manualForward();
         } else {
             robot.horizontalSlides.stop();
