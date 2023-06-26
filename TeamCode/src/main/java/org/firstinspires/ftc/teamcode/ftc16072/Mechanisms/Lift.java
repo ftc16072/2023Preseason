@@ -19,9 +19,9 @@ public class Lift implements Mechanism {
     //FtcDashboard
     DcMotorEx rightLiftMotor;
     DcMotorEx leftLiftMotor;
-    public static double Kp = 0.007;
-    public static double Ki = 0.0001;
-    public static double Kd = 0.0002;
+    public static double Kp = 0.007; // Drives the the lift
+    public static double Ki = 0.0001; // reduces Steady-state error
+    public static double Kd = 0.0002; // eliminates noise
     public double integralSum=0;
 
     ElapsedTime timer = new ElapsedTime();
@@ -44,7 +44,7 @@ public class Lift implements Mechanism {
     private liftPosition presets;
     private double lastError=0;
 
-    private void fillPositions(liftPosition position){
+    private void fillPositions(liftPosition position){ // adds the lift preset values to the dictionary
         positions.clear();
         positions.put(liftPosition.POLE3, LIFT_POSITION_3);
         positions.put(liftPosition.POLE2, LIFT_POSITION_2);
@@ -70,7 +70,7 @@ public class Lift implements Mechanism {
     }
 
     @Override
-    public List<QQtest> getTests() {
+    public List<QQtest> getTests() { // needs to be added
         return null;
     }
 
@@ -79,24 +79,29 @@ public class Lift implements Mechanism {
         return "verticalLift";
     }
     public void manualLiftUp(){
-        //updateLift((rightLiftMotor.getCurrentPosition()+leftLiftMotor.getCurrentPosition())/2+0.5);
+        desiredPosition = (rightLiftMotor.getCurrentPosition()+leftLiftMotor.getCurrentPosition())/2+10;
 
 
 
     }
     public void manualLiftDown(){
-        //updateLift((rightLiftMotor.getCurrentPosition()+leftLiftMotor.getCurrentPosition())/2-0.5); // need to  change
-
+        desiredPosition = (rightLiftMotor.getCurrentPosition()+leftLiftMotor.getCurrentPosition())/2-10;
     }
 
     public void liftToPosition(liftPosition position){
-        desiredPosition = positions.get(position);
+        desiredPosition = positions.get(position); // matches the position with the value in the dictionary and sets desiredPosition
 
     }
     public double updateLift(){
 
         double motorAverage = (rightLiftMotor.getCurrentPosition()+leftLiftMotor.getCurrentPosition())/2;
         power = PID(desiredPosition,motorAverage);
+        /*
+        Issues/ideas:
+        add limit switch
+        add negative power to fully close the lift, maybe could be incorperated with the limit switch
+
+         */
 
         if (currentPostion() > 3000){ // lift cap for safety
             rightLiftMotor.setPower(0);
@@ -107,7 +112,7 @@ public class Lift implements Mechanism {
         }
         return (power);
     }
-    public double PID(double destination, double position){
+    public double PID(double destination, double position){ // does all of the PID math
         double error = destination-position;
         integralSum +=error * timer.seconds();
         double derivative = (error - lastError)/timer.seconds();
@@ -122,6 +127,12 @@ public class Lift implements Mechanism {
 
 
     }
+
+
+
+
+
+    // Methods used for PID tuning
     public double currentPostion(){
         return (rightLiftMotor.getCurrentPosition()+leftLiftMotor.getCurrentPosition())/2;
     }
