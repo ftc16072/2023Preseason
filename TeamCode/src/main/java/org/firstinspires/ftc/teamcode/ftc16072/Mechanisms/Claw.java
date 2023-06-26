@@ -54,7 +54,7 @@ public class Claw implements Mechanism{
         if(CorrectColor()) {
             claw.setPosition(GRIPPED_SERVO_POSITION);
         }
-    /*}
+    /*} d
     else{gamepad1.rumble(10);}*/
     }
     public void manualOpen(){
