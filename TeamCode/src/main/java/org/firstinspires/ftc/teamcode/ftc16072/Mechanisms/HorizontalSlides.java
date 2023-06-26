@@ -52,7 +52,7 @@ public class HorizontalSlides implements Mechanism{
         }
 
 
-    }
+    }//
     public void stop(){
         HorizontalSlide.setPosition(HorizontalSlide.getPosition());
     }
