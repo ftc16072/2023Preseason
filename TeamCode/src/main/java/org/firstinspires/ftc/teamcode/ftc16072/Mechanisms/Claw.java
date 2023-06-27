@@ -6,6 +6,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.ftc16072.QQTest.QQtest;
+import org.firstinspires.ftc.teamcode.ftc16072.QQTest.TestServo;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Claw implements Mechanism{
@@ -42,7 +46,10 @@ public class Claw implements Mechanism{
     }
     @Override
     public List<QQtest> getTests() {
-        return null;
+
+        return Arrays.asList(
+                new TestServo("Claw", 0.3, claw)
+        );
     }
 
     @Override
