@@ -24,9 +24,10 @@ public class Robot {
         horizontalSlides = new HorizontalSlides();
 
         mechanisms = Arrays.asList(
+                        horizontalSlides,
                         mecanumDrive,
-                        gyro,
-                        horizontalSlides
+                        gyro
+
         );
     }
 

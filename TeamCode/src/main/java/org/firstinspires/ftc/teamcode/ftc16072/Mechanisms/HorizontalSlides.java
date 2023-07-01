@@ -4,7 +4,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.ftc16072.QQTest.QQtest;
+import org.firstinspires.ftc.teamcode.ftc16072.QQTest.TestServo;
 
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Handler;
@@ -69,7 +71,10 @@ public class HorizontalSlides implements Mechanism{
 
     @Override
     public List<QQtest> getTests() {
-        return null;
+        return   Arrays.asList(
+                new TestServo("horizontal", 1,HorizontalSlide )
+        );
+
     }
 
     @Override
