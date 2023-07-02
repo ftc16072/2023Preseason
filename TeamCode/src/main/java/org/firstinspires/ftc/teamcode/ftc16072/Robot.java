@@ -20,8 +20,9 @@ public class Robot {
     public Robot(){
         gyro = new Gyro();
         mecanumDrive = new MecanumDrive();
-        nav = new Navigation(gyro, mecanumDrive);
         lift = new Lift();
+
+        nav = new Navigation(gyro, mecanumDrive);
 
         mechanisms = Arrays.asList(
                         mecanumDrive,
