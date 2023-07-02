@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.Gyro;
 import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.Lift;
+
+import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.HorizontalSlide
 import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.MecanumDrive;
 import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.Mechanism;
 import org.firstinspires.ftc.teamcode.ftc16072.Util.Navigation;
@@ -17,16 +19,23 @@ public class Robot {
     Gyro gyro;
     public Navigation nav;
     public Lift lift;
+
+    public HorizontalSlides horizontalSlides;
     public Robot(){
         gyro = new Gyro();
         mecanumDrive = new MecanumDrive();
         nav = new Navigation(gyro, mecanumDrive);
         lift = new Lift();
 
+        horizontalSlides = new HorizontalSlides();
+
         mechanisms = Arrays.asList(
+                        horizontalSlides,
                         mecanumDrive,
                         gyro,
                         lift
+
+                     
         );
     }
 
