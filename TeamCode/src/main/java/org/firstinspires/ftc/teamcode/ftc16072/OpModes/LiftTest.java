@@ -32,10 +32,21 @@ public class LiftTest extends OpMode {
 
     @Override
     public void loop() {
-        if(gamepad1.a){
+        if(gamepad1.a) {
             robot.lift.liftToPosition(Lift.liftPosition.POLE3);
 
+
+        } else if (gamepad1.right_stick_y < -0.1){
+
+            robot.lift.manualLiftUp();
+
+        } else if (gamepad1.right_stick_y > 0.1){
+            robot.lift.manualLiftDown();
+
         }
+
+
+
         telemetry.addData("position",        robot.lift.currentPostion());
         //robot.lift.updateLift();
         telemetry.addData("power",  robot.lift.updateLift());
@@ -43,5 +54,6 @@ public class LiftTest extends OpMode {
         telemetry.addData("Ki",  robot.lift.returnKi());
         telemetry.addData("Kd",  robot.lift.returnKd());
         telemetry.addData("Desired Position", robot.lift.returnDesiredPosition());
+        telemetry.addData("limit switch", robot.lift.limitSwitch.getState());
     }
 }
