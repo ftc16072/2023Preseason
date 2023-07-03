@@ -30,7 +30,7 @@ public class Claw implements Mechanism{
         sensor = hwMap.get(ColorRangeSensor.class,"cone_detector");
         claw.setPosition(RELEASED_SERVO_POSITION);
         teamColor = TeamColor.unknown;
-        while(teamColor.equals(TeamColor.unknown)){
+        //while(teamColor.equals(TeamColor.unknown)){
         if(sensor.blue()>sensor.red()){
             teamColor = TeamColor.blue;
         }
@@ -39,8 +39,7 @@ public class Claw implements Mechanism{
         }
         else{
             teamColor = TeamColor.unknown;
-        }}
-
+        }
 
 
     }
