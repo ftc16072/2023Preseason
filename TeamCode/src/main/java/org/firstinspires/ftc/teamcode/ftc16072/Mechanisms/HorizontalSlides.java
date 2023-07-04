@@ -76,6 +76,12 @@ public class HorizontalSlides implements Mechanism{
         );
 
     }
+    public boolean isSafe(){
+        if (HorizontalSlide.getPosition() < 0.8){
+            return false;
+        }
+        return true;
+    }
 
     @Override
     public String getName() {
