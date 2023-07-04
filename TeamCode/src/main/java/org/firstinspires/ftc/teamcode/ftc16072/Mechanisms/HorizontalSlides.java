@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.ftc16072.QQTest.QQtest;
 import org.firstinspires.ftc.teamcode.ftc16072.QQTest.TestServo;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Handler;
@@ -25,6 +26,8 @@ public class HorizontalSlides implements Mechanism{
     public final double BACK_SERVO_POSITION = 0.473; // preset values need to be tuned
     public final double MIDDLE_SERVO_POSITION = 0.757;
     public final double FRONT_SERVO_POSITION = 1;
+    public final double SAFE_SERVO_POSITION = 0.8;
+    public final double MANUAL_CHANGE= 0.001;
 
     private void fillPositions(Position position){
         positions.clear();
@@ -41,20 +44,18 @@ public class HorizontalSlides implements Mechanism{
     }
 
     public void manualForward(){
-        if (HorizontalSlide.getPosition()+0.001<=1){
-            HorizontalSlide.setPosition(HorizontalSlide.getPosition()+0.001);
+        if (HorizontalSlide.getPosition()+MANUAL_CHANGE<=FRONT_SERVO_POSITION){
+            HorizontalSlide.setPosition(HorizontalSlide.getPosition()+MANUAL_CHANGE);
 
         }
 
     }
 
     public void manualBackward(){
-        if (HorizontalSlide.getPosition()-0.001>=0.473){
-            HorizontalSlide.setPosition(HorizontalSlide.getPosition()-0.001);
+        if (HorizontalSlide.getPosition()-MANUAL_CHANGE>=BACK_SERVO_POSITION){
+            HorizontalSlide.setPosition(HorizontalSlide.getPosition()-MANUAL_CHANGE);
         }
-
-
-    }//
+    }
     public void stop(){
         HorizontalSlide.setPosition(HorizontalSlide.getPosition());
     }
@@ -71,16 +72,12 @@ public class HorizontalSlides implements Mechanism{
 
     @Override
     public List<QQtest> getTests() {
-        return   Arrays.asList(
-                new TestServo("horizontal", 1,HorizontalSlide )
+        return   Collections.singletonList(
+                new TestServo("horizontal", FRONT_SERVO_POSITION, SAFE_SERVO_POSITION, HorizontalSlide )
         );
-
     }
     public boolean isSafe(){
-        if (HorizontalSlide.getPosition() < 0.8){
-            return false;
-        }
-        return true;
+        return HorizontalSlide.getPosition() >= SAFE_SERVO_POSITION;
     }
 
     @Override

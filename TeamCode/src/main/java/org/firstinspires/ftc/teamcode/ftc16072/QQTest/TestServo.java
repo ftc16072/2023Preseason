@@ -6,11 +6,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class TestServo extends  QQtest{
-    double position;
+    double onPosition;
+    double offPostion;
     Servo servo;
-    public TestServo(String name, double position, Servo servo) {
+
+    public TestServo(String name, double onPosition, double offPosition, Servo servo) {
         super(name);
-        this.position = position;
+        this.onPosition = onPosition;
+        this.offPostion = offPosition;
         this.servo = servo;
 
     }
@@ -18,10 +21,10 @@ public class TestServo extends  QQtest{
     @Override
     public void run(boolean on, Telemetry telemetry) {
         if(on){
-            servo.setPosition(position);
+            servo.setPosition(onPosition);
         }
         else{
-            servo.setPosition(0);
+            servo.setPosition(offPostion);
         }
         telemetry.addData("Current position", this.servo.getPosition());
 

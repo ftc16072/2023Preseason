@@ -50,7 +50,8 @@ public class MecanumDrive implements Mechanism {
 
     @Override
     public List<QQtest> getTests() {
-        return Arrays.asList(new TestMotor("Back Left", 0.2, backLeftMotor),
+        return Arrays.asList(
+                new TestMotor("Back Left", 0.2, backLeftMotor),
                 new TestMotor("Back Right", 0.2, backRightMotor),
                 new TestMotor("Front Left", 0.2, frontLeftMotor),
                 new TestMotor("Front Right", 0.2, frontRightMotor));
