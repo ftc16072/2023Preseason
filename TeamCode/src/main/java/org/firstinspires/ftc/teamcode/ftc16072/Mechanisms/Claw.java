@@ -8,11 +8,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.ftc16072.QQTest.QQtest;
 import org.firstinspires.ftc.teamcode.ftc16072.QQTest.TestServo;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Claw implements Mechanism{
+    public static final int AUTO_GRAB_RANGE_INCHES = 3;
     public Servo claw;
     private ColorRangeSensor sensor;
     public static double GRIPPED_SERVO_POSITION = 0.15;
@@ -45,9 +46,8 @@ public class Claw implements Mechanism{
     }
     @Override
     public List<QQtest> getTests() {
-
-        return Arrays.asList(
-                new TestServo("Claw", 0.3, claw)
+        return Collections.singletonList(
+                new TestServo("Claw", GRIPPED_SERVO_POSITION, RELEASED_SERVO_POSITION, claw)
         );
     }
 
@@ -56,27 +56,30 @@ public class Claw implements Mechanism{
         return null;
     }
 
-    public void manualClose(){
-        if(CorrectColor()) {
+    public boolean manualClose(){
+        if(correctColor()) {
             claw.setPosition(GRIPPED_SERVO_POSITION);
+            return true;
         }
-    /*} d
-    else{gamepad1.rumble(10);}*/
+        return false;
     }
+
     public void manualOpen(){
         claw.setPosition(RELEASED_SERVO_POSITION);
     }
     public boolean inRange(){
-        return sensor.getDistance(DistanceUnit.INCH) <= 3;
+        return sensor.getDistance(DistanceUnit.INCH) <= AUTO_GRAB_RANGE_INCHES;
     }
-    public boolean CorrectColor() {
+    public boolean correctColor() {
         if ((teamColor.equals(TeamColor.blue)) && (sensor.blue() > sensor.red())) {
             return true;
         }
         return teamColor.equals(TeamColor.red) && (sensor.blue() < sensor.red());
      }
-    public void Autograb() {
-        if (CorrectColor() && inRange()) {
+    public boolean autograb() {
+        if (correctColor() && inRange()) {
             claw.setPosition(GRIPPED_SERVO_POSITION);
+            return true;
         }
+        return false;
     }}
