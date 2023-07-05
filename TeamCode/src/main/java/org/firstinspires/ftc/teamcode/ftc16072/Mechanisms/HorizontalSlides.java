@@ -82,6 +82,6 @@ public class HorizontalSlides implements Mechanism{
 
     @Override
     public String getName() {
-        return null;
+        return "horizontalSlides";
     }
 }
