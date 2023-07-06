@@ -10,15 +10,11 @@ public class TestMotor extends QQtest {
     DcMotor motor;
     double speed;
 
-    public TestMotor(String name, double speed, DcMotor Motor) {
+    public TestMotor(String name, double speed, DcMotor motor) {
         super(name);
         this.speed = speed;
         this.motor = motor;
-
     }
-
-
-
 
 
     public void run(boolean on, Telemetry telemetry){
@@ -27,9 +23,8 @@ public class TestMotor extends QQtest {
         }
         else{
             motor.setPower(0);
-
         }
-        telemetry.addData("Encoder Value", this.motor.getCurrentPosition());
+        telemetry.addData("Encoder Value", motor.getCurrentPosition());
     }
 
 

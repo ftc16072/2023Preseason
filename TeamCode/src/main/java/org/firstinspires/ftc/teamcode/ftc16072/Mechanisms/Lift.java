@@ -12,7 +12,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.ftc16072.QQTest.QQtest;
+import org.firstinspires.ftc.teamcode.ftc16072.QQTest.TestTwoMotor;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 @Config
@@ -80,7 +83,9 @@ public class Lift implements Mechanism {
 
     @Override
     public List<QQtest> getTests() { // needs to be added
-        return null;
+        return Arrays.asList(
+                new TestTwoMotor("lift up", leftLiftMotor, rightLiftMotor, 0.3),
+                new TestTwoMotor("lift down", leftLiftMotor, rightLiftMotor, -0.2));
     }
 
     @Override

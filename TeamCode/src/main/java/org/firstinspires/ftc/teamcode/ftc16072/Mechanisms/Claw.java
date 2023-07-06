@@ -53,7 +53,7 @@ public class Claw implements Mechanism{
 
     @Override
     public String getName() {
-        return null;
+        return "claw";
     }
 
     public boolean manualClose(){

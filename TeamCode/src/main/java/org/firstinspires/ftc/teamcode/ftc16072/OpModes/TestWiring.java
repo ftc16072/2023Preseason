@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.ftc16072.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.Mechanism;
 import org.firstinspires.ftc.teamcode.ftc16072.QQTest.QQtest;
@@ -18,64 +17,52 @@ public class TestWiring extends OpMode {
     int currentMechanism;
     List<QQtest> testList;
 
+    public boolean wasUp;
+    public boolean wasDown;
+    public boolean wasLeft;
+    public boolean wasRight;
 
-    public void init(){
+
+    public void init() {
         robot.init(hardwareMap);
         mechanismList = robot.getMechanismList();
 
     }
-    public void loop(){
-        if (gamepad1.dpad_up){ //swap mechanisms
-            // alternate 1 mechanism up unless you are already at the last one in which you move to the first one
-            if (currentMechanism >= mechanismList.size()){
+
+    public void loop() {
+        if (gamepad1.dpad_up && !wasUp) {
+            currentMechanism -= 1;
+            if (currentMechanism < 0){
+                currentMechanism = mechanismList.size() - 1;
+            }
+            currentTest = 0;
+        } else if (gamepad1.dpad_down && !wasDown) {
+            currentMechanism += 1;
+            if (currentMechanism >= mechanismList.size()) {
                 currentMechanism = 0;
             }
-            else {
-                currentMechanism = currentMechanism + 1;
-
-            }
             currentTest = 0;
-
-            // update mechanism
-
-        }
-        else if (gamepad1.dpad_down){ // possible failure point
-            if (currentMechanism <= 0){
-                currentMechanism = mechanismList.size()-1;
-
-            }
-            else{
-                currentMechanism = currentMechanism - 1;
-            }
-            currentTest = 0;
-            // update mechanism
         }
         testList = mechanismList.get(currentMechanism).getTests();
-        if (gamepad1.dpad_right){ // swap tests
-            if (currentTest>=testList.size()){
+        if (gamepad1.dpad_right && !wasRight) {
+            currentTest += 1;
+            if (currentTest >= testList.size()){
                 currentTest = 0;
-
             }
-            else{
-                currentTest = currentTest + 1;
-            }
-        }
-
-        else if (gamepad1.dpad_left){
-            if (currentTest<=0){
+        } else if (gamepad1.dpad_left && !wasLeft) {
+            currentTest -= 1;
+            if (currentTest < 0){
                 currentTest = testList.size()-1;
             }
-            else{
-                currentTest = currentTest - 1;
-            }
-
-
         }
+        wasUp = gamepad1.dpad_up;
+        wasDown = gamepad1.dpad_down;
+        wasRight = gamepad1.dpad_right;
+        wasLeft = gamepad2.dpad_left;
         // run mechanism
-        telemetry.addData("mechanism", mechanismList.get(currentMechanism));
-        telemetry.addData("test", testList.get(currentTest));
+        telemetry.addData("mechanism", mechanismList.get(currentMechanism).getName());
+        telemetry.addData("test", testList.get(currentTest).name);
         testList.get(currentTest).run(gamepad1.a, telemetry);
+
     }
-
-
 }
