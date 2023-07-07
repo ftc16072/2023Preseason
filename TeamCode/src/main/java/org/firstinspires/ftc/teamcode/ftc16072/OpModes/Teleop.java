@@ -46,7 +46,7 @@ public class Teleop extends OpMode {
 
         if (gamepad2.left_stick_x>0){
             sc.moveHorizontalForward();
-        } 
+        }
         if (gamepad2.left_stick_x<0){
             sc.moveHorizontalBackwards();
         }
