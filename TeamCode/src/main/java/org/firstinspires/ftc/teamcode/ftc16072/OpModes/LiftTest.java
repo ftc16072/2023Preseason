@@ -20,20 +20,12 @@ public class LiftTest extends OpMode {
         robot.init(hardwareMap);
         dashboard = FtcDashboard.getInstance();
         telemetry = dashboard.getTelemetry();
-        telemetry.addData("position",        robot.lift.currentPostion());
-
-        telemetry.addData("Kp",  robot.lift.returnKp());
-        telemetry.addData("Ki",  robot.lift.returnKi());
-        telemetry.addData("Kd",  robot.lift.returnKd());
-        telemetry.addData("Desired Position", robot.lift.returnDesiredPosition());
-
-
     }
 
     @Override
     public void loop() {
         if(gamepad1.a) {
-            robot.lift.liftToPosition(Lift.liftPosition.POLE3);
+            robot.lift.liftToPosition(Lift.Position.HIGHEST_POLE);
 
 
         } else if (gamepad1.right_stick_y < -0.1){
@@ -44,16 +36,6 @@ public class LiftTest extends OpMode {
             robot.lift.manualLiftDown();
 
         }
-
-
-
-        telemetry.addData("position",        robot.lift.currentPostion());
-        //robot.lift.updateLift();
-        telemetry.addData("power",  robot.lift.updateLift());
-        telemetry.addData("Kp",  robot.lift.returnKp());
-        telemetry.addData("Ki",  robot.lift.returnKi());
-        telemetry.addData("Kd",  robot.lift.returnKd());
-        telemetry.addData("Desired Position", robot.lift.returnDesiredPosition());
-        telemetry.addData("limit switch", robot.lift.limitSwitch.getState());
+        robot.lift.update(telemetry);
     }
 }

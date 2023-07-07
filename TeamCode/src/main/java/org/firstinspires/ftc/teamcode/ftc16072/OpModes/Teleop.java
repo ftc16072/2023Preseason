@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.ftc16072.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.HorizontalSlides;
 import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.Lift;
 import org.firstinspires.ftc.teamcode.ftc16072.Robot;
@@ -20,16 +21,16 @@ public class Teleop extends OpMode {
     @Override
     public void loop() {
         if (gamepad2.a){
-            sc.goToVertical(Lift.liftPosition.INTAKE_POSITION);
+            sc.goToVertical(Lift.Position.INTAKE_POSITION);
 
         } else if (gamepad2.x){
-            sc.goToVertical(Lift.liftPosition.POLE1);
+            sc.goToVertical(Lift.Position.LOWEST_POLE);
         } else if(gamepad2.b){
-            sc.goToVertical(Lift.liftPosition.POLE2);
+            sc.goToVertical(Lift.Position.MIDDLE_POLE);
         }else if (gamepad2.y){
-            sc.goToVertical(Lift.liftPosition.POLE3);
+            sc.goToVertical(Lift.Position.HIGHEST_POLE);
         } else if (gamepad2.right_bumper){
-            sc.goToVertical(Lift.liftPosition.GROUND_POSITION);
+            sc.goToVertical(Lift.Position.GROUND_POSITION);
         } else if (gamepad2.right_stick_y < -0.1){ // check
             sc.moveVerticalUpwards();
         } else if (gamepad2.right_stick_y > 0.1) {
@@ -45,13 +46,9 @@ public class Teleop extends OpMode {
 
         if (gamepad2.left_stick_x>0){
             sc.moveHorizontalForward();
-        } else {
-            robot.horizontalSlides.stop();
-        }
+        } 
         if (gamepad2.left_stick_x<0){
             sc.moveHorizontalBackwards();
-        } else {
-            robot.horizontalSlides.stop();
         }
         if (gamepad2.right_trigger >0.4){
             robot.claw.manualOpen();
@@ -64,7 +61,7 @@ public class Teleop extends OpMode {
                 gamepad1.left_stick_x,
                 gamepad1.right_stick_x);
 
-        robot.lift.updateLift(); // needed for pid
+        robot.lift.update(telemetry); // needed for pid
         telemetry.addData("horizontal", robot.horizontalSlides.isSafe());
         telemetry.addData("lift", robot.lift.isSafe());
         telemetry.addData("limit switch", robot.lift.limitSwitch.getState());
