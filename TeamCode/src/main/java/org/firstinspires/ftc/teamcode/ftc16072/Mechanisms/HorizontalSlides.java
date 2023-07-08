@@ -3,14 +3,13 @@ package org.firstinspires.ftc.teamcode.ftc16072.Mechanisms;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.ftc16072.QQTest.QQtest;
 import org.firstinspires.ftc.teamcode.ftc16072.QQTest.TestServo;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.logging.Handler;
 
 public class HorizontalSlides implements Mechanism{
     public enum Position {
@@ -19,17 +18,15 @@ public class HorizontalSlides implements Mechanism{
         FRONT
     }
     Hashtable<Position, Double> positions = new Hashtable<>();
-    Position presets;
 
-
-    public Servo HorizontalSlide;
+    public Servo slideServo;
     public final double BACK_SERVO_POSITION = 0.473; // preset values need to be tuned
     public final double MIDDLE_SERVO_POSITION = 0.757;
     public final double FRONT_SERVO_POSITION = 1;
     public final double SAFE_SERVO_POSITION = 0.8;
     public final double MANUAL_CHANGE= 0.001;
 
-    private void fillPositions(Position position){
+    private void fillPositions(){
         positions.clear();
         positions.put(Position.BACK, BACK_SERVO_POSITION);
         positions.put(Position.MIDDLE, MIDDLE_SERVO_POSITION);
@@ -38,46 +35,49 @@ public class HorizontalSlides implements Mechanism{
 
     @Override
     public void init(HardwareMap hwMap) {
-        HorizontalSlide = hwMap.get(Servo.class,  "horizontal");
-        fillPositions(presets);
-
+        slideServo = hwMap.get(Servo.class,  "horizontal");
+        fillPositions();
     }
 
-    public void manualForward(){
-        if (HorizontalSlide.getPosition()+MANUAL_CHANGE<=FRONT_SERVO_POSITION){
-            HorizontalSlide.setPosition(HorizontalSlide.getPosition()+MANUAL_CHANGE);
-
+    public boolean manualForward(){
+        if (slideServo.getPosition()+MANUAL_CHANGE<=FRONT_SERVO_POSITION){
+            slideServo.setPosition(slideServo.getPosition()+MANUAL_CHANGE);
+            return true;
         }
-
+        return false;
     }
 
-    public void manualBackward(){
-        if (HorizontalSlide.getPosition()-MANUAL_CHANGE>=BACK_SERVO_POSITION){
-            HorizontalSlide.setPosition(HorizontalSlide.getPosition()-MANUAL_CHANGE);
+    public boolean manualBackward(){
+        if (slideServo.getPosition()-MANUAL_CHANGE>=BACK_SERVO_POSITION){
+            slideServo.setPosition(slideServo.getPosition()-MANUAL_CHANGE);
+            return true;
         }
+        return false;
     }
-    public void stop(){
-        HorizontalSlide.setPosition(HorizontalSlide.getPosition());
-    }
-
 
     public void goToPosition(Position position){ // uses preset positions
         double desiredPosition = positions.get(position);
-        HorizontalSlide.setPosition(desiredPosition);
+        slideServo.setPosition(desiredPosition);
 
     }
+
+    @SuppressWarnings("unused")
+    public void debug(Telemetry telemetry){
+        telemetry.addData("Horizontal Slide Pos", slideServo.getPosition());
+    }
+
     public double currentPosition(){
-        return HorizontalSlide.getPosition();
+        return slideServo.getPosition();
     }
 
     @Override
     public List<QQtest> getTests() {
         return   Collections.singletonList(
-                new TestServo("horizontal", FRONT_SERVO_POSITION, SAFE_SERVO_POSITION, HorizontalSlide )
+                new TestServo("horizontal", FRONT_SERVO_POSITION, SAFE_SERVO_POSITION, slideServo)
         );
     }
     public boolean isSafe(){
-        return HorizontalSlide.getPosition() >= SAFE_SERVO_POSITION;
+        return slideServo.getPosition() >= SAFE_SERVO_POSITION;
     }
 
     @Override

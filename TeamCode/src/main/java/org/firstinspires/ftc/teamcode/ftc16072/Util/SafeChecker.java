@@ -52,11 +52,11 @@ public class SafeChecker {
 
 
     }
-    public void goToVertical(Lift.liftPosition position){
+    public void goToVertical(Lift.Position position){
         if (robot.horizontalSlides.isSafe()){
             robot.lift.liftToPosition(position);
 
-        } else if (position != Lift.liftPosition.INTAKE_POSITION){
+        } else if (position != Lift.Position.INTAKE_POSITION){
             robot.lift.liftToPosition(position);
 
         }

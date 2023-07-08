@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.ftc16072.Mechanisms;
 
-import android.icu.text.Transliterator;
-
-import com.acmerobotics.dashboard.FtcDashboard;
+//import com.acmerobotics.dashboard.FtcDashboard;
+//import com.acmerobotics.dashboard.config.Config; Use this for Dashboard
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -11,55 +10,60 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.ftc16072.QQTest.QQtest;
+import org.firstinspires.ftc.teamcode.ftc16072.QQTest.TestSwitch;
 import org.firstinspires.ftc.teamcode.ftc16072.QQTest.TestTwoMotor;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Hashtable;
+        import java.util.Hashtable;
 import java.util.List;
-@Config
+
+@Config  //Use this for Dashboard
 public class Lift implements Mechanism {
-    //FtcDashboard
     DcMotorEx rightLiftMotor;
     DcMotorEx leftLiftMotor;
     public DigitalChannel limitSwitch;
 
-    public static double Kp = 0.007; // Drives the the lift
-    public static double Ki = 0.0001; // reduces Steady-state error
-    public static double Kd = 0.0002; // eliminates noise
-    public double integralSum=0;
+    public static double K_P = 0.007; // Drives the the lift
+    public static double K_I = 0.0001; // reduces Steady-state error
+    public static double K_D = 0.0002; // eliminates noise
+    public double integralSum;
 
     ElapsedTime timer = new ElapsedTime();
-    public enum liftPosition {
-        POLE3,
-        POLE2,
-        POLE1,
+    public enum Position {
+        HIGHEST_POLE,
+        MIDDLE_POLE,
+        LOWEST_POLE,
         GROUND_POSITION,
         INTAKE_POSITION,
     }
+    //TODO: tune lift preset values
+    public static int LIFT_POSITION_SAFETY = 3300;
+    public static int LIFT_POSITION_HIGH_POLE = 2400;
+    public static int LIFT_POSITION_MIDDLE_POLE = 2000;
+    public static int LIFT_POSITION_LOWEST_POLE = 1800;
+    public static int LIFT_POSITION_GROUND = 200;
+    public static int LIFT_POSITION_REST = 70;
+    public static int LIFT_POSITION_INTAKE = 0;
+    public static int MANUAL_CHANGE = 100;
+    private static double GRAVITY_CONSTANT = 0.1;
 
-    public final double LIFT_POSITION_3=2400;
-    public final double LIFT_POSITION_2 = 2400;
-    public final double LIFT_POSITION_1 = 1800; // the numbers correspond to each height level of the poles
-    public final double LIFT_POSITION_GROUND=200;
-    public final double LIFT_POSITION_INTAKE=0;
-    private final double GRAVITY_CONSTANT = 0.1;
-    public static double desiredPosition;
-    public double currentPosition;
-    public static double power = 0;
+    final static double MAX_MOTOR_SPEED = 1.0;
 
-    Hashtable<liftPosition, Double> positions = new Hashtable<>();
-    private liftPosition presets;
+    double desiredPosition;
+    double currentPosition;
+
+    Hashtable<Position, Integer> positions = new Hashtable<>();
     private double lastError=0;
 
-    private void fillPositions(liftPosition position){ // adds the lift preset values to the dictionary
+    private void fillPositions(){ // adds the lift preset values to the dictionary
         positions.clear();
-        positions.put(liftPosition.POLE3, LIFT_POSITION_3);
-        positions.put(liftPosition.POLE2, LIFT_POSITION_2);
-        positions.put(liftPosition.POLE1, LIFT_POSITION_1);
-        positions.put(liftPosition.GROUND_POSITION, LIFT_POSITION_GROUND);
-        positions.put(liftPosition.INTAKE_POSITION, LIFT_POSITION_INTAKE);
+        positions.put(Position.HIGHEST_POLE, LIFT_POSITION_HIGH_POLE);
+        positions.put(Position.MIDDLE_POLE, LIFT_POSITION_MIDDLE_POLE);
+        positions.put(Position.LOWEST_POLE, LIFT_POSITION_LOWEST_POLE);
+        positions.put(Position.GROUND_POSITION, LIFT_POSITION_GROUND);
+        positions.put(Position.INTAKE_POSITION, LIFT_POSITION_INTAKE);
     }
 
 
@@ -67,7 +71,7 @@ public class Lift implements Mechanism {
     public void init(HardwareMap hwMap) {
         rightLiftMotor = hwMap.get(DcMotorEx.class,"right_lift_motor");
         leftLiftMotor = hwMap.get(DcMotorEx.class, "left_lift_motor");
-        rightLiftMotor.setDirection(DcMotorSimple.Direction.REVERSE); // this might need to be edited to left instead
+        rightLiftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         rightLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -77,15 +81,17 @@ public class Lift implements Mechanism {
         limitSwitch = hwMap.get(DigitalChannel.class, "lift_switch");
         limitSwitch.setMode(DigitalChannel.Mode.INPUT);
 
-        desiredPosition =  (rightLiftMotor.getCurrentPosition()+leftLiftMotor.getCurrentPosition())/2;
-        fillPositions(presets);
+        desiredPosition = LIFT_POSITION_GROUND;
+        fillPositions();
+        timer.reset();
     }
 
     @Override
     public List<QQtest> getTests() { // needs to be added
         return Arrays.asList(
                 new TestTwoMotor("lift up", leftLiftMotor, rightLiftMotor, 0.3),
-                new TestTwoMotor("lift down", leftLiftMotor, rightLiftMotor, -0.2));
+                new TestTwoMotor("lift down", leftLiftMotor, rightLiftMotor, -0.2),
+                new TestSwitch("limit switch", limitSwitch));
     }
 
     @Override
@@ -94,90 +100,80 @@ public class Lift implements Mechanism {
     }
 
     public void manualLiftUp(){
-        desiredPosition = (rightLiftMotor.getCurrentPosition()+leftLiftMotor.getCurrentPosition())/2;
-        desiredPosition = desiredPosition+100;
-
+        desiredPosition = currentPosition() + MANUAL_CHANGE;
+        if(desiredPosition > LIFT_POSITION_SAFETY){
+            desiredPosition = LIFT_POSITION_SAFETY;
+        }
     }
     public void manualLiftDown(){
-        desiredPosition = (rightLiftMotor.getCurrentPosition()+leftLiftMotor.getCurrentPosition())/2;
-        desiredPosition = desiredPosition-60;
+        desiredPosition = currentPosition() - MANUAL_CHANGE;
+        if(desiredPosition < LIFT_POSITION_INTAKE){
+            desiredPosition = LIFT_POSITION_INTAKE;
+        }
     }
 
-    public void liftToPosition(liftPosition position){
+    public void liftToPosition(Position position){
         desiredPosition = positions.get(position); // matches the position with the value in the dictionary and sets desiredPosition
-
     }
-    public double updateLift(){
-        /*
-        if (limitSwitch.getState()==true){ // resets the encoder values
+
+    public void update(Telemetry telemetry){
+        double power;
+
+        if (!limitSwitch.getState()){ // resets the encoder values
             rightLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             rightLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             leftLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             leftLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
-         */
-        currentPosition = (rightLiftMotor.getCurrentPosition()+leftLiftMotor.getCurrentPosition())/2;
-        power = PID(desiredPosition, currentPosition);
-        /*
-        Issues/ideas:
-        add limit switch
-        add negative power to fully close the lift, maybe could be incorperated with the limit switch
-         */
-        if (currentPostion() > 3300){ // lift cap for safety
+        power = PID(desiredPosition, currentPosition());
+
+        if (currentPosition() > LIFT_POSITION_SAFETY){ // lift cap for safety
             rightLiftMotor.setPower(0);
             leftLiftMotor.setPower(0);
         } else {
             rightLiftMotor.setPower(power);
             leftLiftMotor.setPower(power);
         }
-        return (power);
+        telemetry.addData("currentPosition", currentPosition());
+        telemetry.addData("desiredPosition", desiredPosition);
+        telemetry.addData("power", power);
     }
+
     public double PID(double destination, double position){ // does all of the PID math
+        double result;
         double error = destination-position;
-        integralSum +=error * timer.seconds();
+        if(Math.signum(error) != Math.signum(integralSum)){
+           integralSum = 0;
+        }
+        else{
+           integralSum += error * timer.seconds();
+        }
+
+        if(integralSum * K_I > MAX_MOTOR_SPEED){
+            integralSum = MAX_MOTOR_SPEED / K_I;
+        }
+        if(integralSum * K_I < -MAX_MOTOR_SPEED){
+            integralSum = -MAX_MOTOR_SPEED / K_I;
+        }
+
         double derivative = (error - lastError)/timer.seconds();
         lastError = error;
 
         timer.reset();
-        if (desiredPosition > 70){
-            return ((error*Kp) + (integralSum*Ki) + (derivative *Kd))+GRAVITY_CONSTANT;
+        result = (error * K_P) + (integralSum * K_I) + (derivative * K_D);
+        if (desiredPosition > LIFT_POSITION_REST){
+            return result + GRAVITY_CONSTANT;
         } else {
-            return ((error*Kp) + (integralSum*Ki) + (derivative *Kd));
-            //return -1;
+            return result;
         }
-
     }
+
     public boolean isSafe(){
-        if (currentPosition <200){
-            return false;
-        }
-        return true;
-
+        return (currentPosition >= LIFT_POSITION_GROUND);
     }
 
-
-
-
-
-    // Methods used for PID tuning, ignore them
-
-    public double currentPostion(){
-        return (rightLiftMotor.getCurrentPosition()+leftLiftMotor.getCurrentPosition())/2;
+    public double currentPosition(){
+        return (rightLiftMotor.getCurrentPosition() + leftLiftMotor.getCurrentPosition())/2.0;
     }
-
-    public double returnKp(){
-        return Kp;
-    }
-    public double returnKi(){
-        return Ki;
-    }
-    public double returnKd(){
-        return Kd;
-    }
-    public double returnDesiredPosition(){
-        return desiredPosition;
-    }
-
-
 }
