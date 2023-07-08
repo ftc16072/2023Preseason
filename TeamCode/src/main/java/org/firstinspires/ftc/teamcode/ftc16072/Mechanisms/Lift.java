@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.ftc16072.Mechanisms;
 
 //import com.acmerobotics.dashboard.FtcDashboard;
 //import com.acmerobotics.dashboard.config.Config; Use this for Dashboard
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -11,12 +12,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.ftc16072.QQTest.QQtest;
+import org.firstinspires.ftc.teamcode.ftc16072.QQTest.TestSwitch;
 import org.firstinspires.ftc.teamcode.ftc16072.QQTest.TestTwoMotor;
 
 import java.util.Arrays;
         import java.util.Hashtable;
 import java.util.List;
-//@Config  Use this for Dashboard
+
+@Config  //Use this for Dashboard
 public class Lift implements Mechanism {
     DcMotorEx rightLiftMotor;
     DcMotorEx leftLiftMotor;
@@ -87,7 +90,8 @@ public class Lift implements Mechanism {
     public List<QQtest> getTests() { // needs to be added
         return Arrays.asList(
                 new TestTwoMotor("lift up", leftLiftMotor, rightLiftMotor, 0.3),
-                new TestTwoMotor("lift down", leftLiftMotor, rightLiftMotor, -0.2));
+                new TestTwoMotor("lift down", leftLiftMotor, rightLiftMotor, -0.2),
+                new TestSwitch("limit switch", limitSwitch));
     }
 
     @Override
@@ -97,34 +101,33 @@ public class Lift implements Mechanism {
 
     public void manualLiftUp(){
         desiredPosition = currentPosition() + MANUAL_CHANGE;
+        if(desiredPosition > LIFT_POSITION_SAFETY){
+            desiredPosition = LIFT_POSITION_SAFETY;
+        }
     }
     public void manualLiftDown(){
         desiredPosition = currentPosition() - MANUAL_CHANGE;
+        if(desiredPosition < LIFT_POSITION_INTAKE){
+            desiredPosition = LIFT_POSITION_INTAKE;
+        }
     }
 
     public void liftToPosition(Position position){
         desiredPosition = positions.get(position); // matches the position with the value in the dictionary and sets desiredPosition
     }
 
-    public double update(Telemetry telemetry){
+    public void update(Telemetry telemetry){
         double power;
-        double currentPosition;
 
-        /*
-        if (limitSwitch.getState()==true){ // resets the encoder values
-            rightLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); limit switch code
+        if (!limitSwitch.getState()){ // resets the encoder values
+            rightLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             rightLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             leftLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             leftLiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
-         */
         power = PID(desiredPosition, currentPosition());
-        /*
-        Issues/ideas:
-        add limit switch
-        add negative power to fully close the lift, maybe could be incorperated with the limit switch
-         */
+
         if (currentPosition() > LIFT_POSITION_SAFETY){ // lift cap for safety
             rightLiftMotor.setPower(0);
             leftLiftMotor.setPower(0);
@@ -133,10 +136,10 @@ public class Lift implements Mechanism {
             leftLiftMotor.setPower(power);
         }
         telemetry.addData("currentPosition", currentPosition());
+        telemetry.addData("desiredPosition", desiredPosition);
         telemetry.addData("power", power);
-
-        return (power);
     }
+
     public double PID(double destination, double position){ // does all of the PID math
         double result;
         double error = destination-position;
