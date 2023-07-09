@@ -55,6 +55,7 @@ public class Teleop extends OpMode {
         } else if (gamepad2.left_trigger > 0.4){
             robot.claw.manualClose();
         }
+        robot.claw.autograb();
 
 
         robot.nav.fieldRelative(-gamepad1.left_stick_y,
