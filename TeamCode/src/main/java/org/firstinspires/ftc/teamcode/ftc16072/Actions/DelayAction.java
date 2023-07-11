@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.ftc16072.Robot;
 public class DelayAction extends QQAction{
     double delayTill;
     double seconds;
-    DelayAction(double seconds){
+    public DelayAction(double seconds){
         this.seconds = seconds;
     }
     @Override
