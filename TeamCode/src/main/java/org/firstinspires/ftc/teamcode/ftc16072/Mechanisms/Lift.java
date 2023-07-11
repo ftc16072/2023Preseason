@@ -168,7 +168,7 @@ public class Lift implements Mechanism {
             return result;
         }
     }
-
+// use safechecker algo
     public boolean isSafe(){
         return (currentPosition >= LIFT_POSITION_GROUND);
     }
