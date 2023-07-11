@@ -22,19 +22,28 @@ public class Teleop extends OpMode {
     public void loop() {
         if (gamepad2.a){
             sc.goToVertical(Lift.Position.INTAKE_POSITION);
+            //robot.lift.liftToPosition(Lift.Position.INTAKE_POSITION);
 
         } else if (gamepad2.x){
             sc.goToVertical(Lift.Position.LOWEST_POLE);
+            //robot.lift.liftToPosition(Lift.Position.LOWEST_POLE);
+
         } else if(gamepad2.b){
             sc.goToVertical(Lift.Position.MIDDLE_POLE);
+            //robot.lift.liftToPosition(Lift.Position.MIDDLE_POLE);
+
         }else if (gamepad2.y){
+
             sc.goToVertical(Lift.Position.HIGHEST_POLE);
+
+
         } else if (gamepad2.right_bumper){
             sc.goToVertical(Lift.Position.GROUND_POSITION);
         } else if (gamepad2.right_stick_y < -0.1){ // check
             sc.moveVerticalUpwards();
         } else if (gamepad2.right_stick_y > 0.1) {
             sc.moveVerticalDownwards();
+
         }
         if (gamepad2.dpad_up){
             sc.gotoHorizontal(HorizontalSlides.Position.FRONT);
@@ -64,7 +73,7 @@ public class Teleop extends OpMode {
 
         robot.lift.update(telemetry); // needed for pid
         telemetry.addData("horizontal", robot.horizontalSlides.isSafe());
-        telemetry.addData("lift", robot.lift.isSafe());
+        telemetry.addData("lift", robot.lift.isSafeTelemetry(telemetry));
         telemetry.addData("limit switch", robot.lift.limitSwitch.getState());
 
     }

@@ -52,7 +52,6 @@ public class Lift implements Mechanism {
     final static double MAX_MOTOR_SPEED = 1.0;
 
     double desiredPosition;
-    double currentPosition;
 
     Hashtable<Position, Integer> positions = new Hashtable<>();
     private double lastError=0;
@@ -169,8 +168,13 @@ public class Lift implements Mechanism {
         }
     }
 
+    public boolean isSafeTelemetry(Telemetry telemetry){
+        telemetry.addData("current position", currentPosition());
+        telemetry.addData("compare", LIFT_POSITION_GROUND);
+        return isSafe();
+    }
     public boolean isSafe(){
-        return (currentPosition >= LIFT_POSITION_GROUND);
+        return (currentPosition() >= LIFT_POSITION_GROUND);
     }
 
     public double currentPosition(){
