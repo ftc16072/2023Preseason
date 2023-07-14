@@ -20,6 +20,7 @@ import com.acmerobotics.roadrunner.trajectory.constraints.TranslationalVelocityC
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.Gyro;
 import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.MecanumDrive;
+import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.OdometryPod;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,7 +44,7 @@ public class Navigation extends com.acmerobotics.roadrunner.drive.MecanumDrive{
     public TrajectoryFollower follower;
 
 
-    public Navigation(Gyro gyro, MecanumDrive mecanumDrive){
+    public Navigation(Gyro gyro, MecanumDrive mecanumDrive, OdometryPod right,OdometryPod left,OdometryPod middle){
         super(kV,kA,kStatic,mecanumDrive.TRACK_WIDTH_IN);
         this.gyro = gyro;
         this.mecanumDrive = mecanumDrive;
