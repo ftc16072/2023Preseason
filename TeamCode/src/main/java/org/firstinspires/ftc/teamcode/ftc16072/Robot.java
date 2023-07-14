@@ -32,9 +32,9 @@ public class Robot {
         mecanumDrive = new MecanumDrive();
         lift = new Lift();
         horizontalSlides = new HorizontalSlides();
-        rightPod = new OdometryPod("front_right_motor",8,0, DistanceUnit.INCH);
-        leftPod = new OdometryPod("left_pod",-8,0,DistanceUnit.INCH);
-        middlePod = new OdometryPod("middle_pod",0,0,DistanceUnit.INCH);
+        rightPod = new OdometryPod("enc_right", false,0,6, DistanceUnit.INCH);
+        leftPod = new OdometryPod("enc_left",true,0,-6, DistanceUnit.INCH);
+        middlePod = new OdometryPod("enc_x", true,0,0, DistanceUnit.INCH);
         nav = new Navigation(gyro, mecanumDrive, rightPod, leftPod, middlePod);
 
         mechanisms = Arrays.asList(
@@ -46,6 +46,15 @@ public class Robot {
                         rightPod,
                         leftPod,
                         middlePod
+        );
+    }
+    public void makeDriveOnly(){
+        mechanisms = Arrays.asList(
+                mecanumDrive,
+                gyro,
+                rightPod,
+                leftPod,
+                middlePod
         );
     }
 
