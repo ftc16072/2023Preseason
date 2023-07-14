@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.ftc16072.OpModes;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -8,13 +10,18 @@ import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.HorizontalSlides;
 import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.Lift;
 import org.firstinspires.ftc.teamcode.ftc16072.Robot;
 import org.firstinspires.ftc.teamcode.ftc16072.Util.SafeChecker;
+@Config
 @TeleOp
 public class Teleop extends OpMode {
+    FtcDashboard dashboard;
     Robot robot = new Robot();
     SafeChecker sc = new SafeChecker(robot);
+
     @Override
     public void init() {
         robot.init(hardwareMap);
+        dashboard = FtcDashboard.getInstance();
+        telemetry= dashboard.getTelemetry();
 
     }
 
