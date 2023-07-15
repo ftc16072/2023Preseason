@@ -9,14 +9,14 @@ public abstract class QQAction {
 
     public abstract QQAction run(OpMode opMode, Robot robot);
 
-    QQAction append(QQAction next){
+    public QQAction append(QQAction next){
         if(nextAction != null){
-            return nextAction.append(next);
+            nextAction.append(next);
         }
         else{
             nextAction = next;
-            return next;
         }
+        return this;
     }
     public abstract String getDebugString();
 
