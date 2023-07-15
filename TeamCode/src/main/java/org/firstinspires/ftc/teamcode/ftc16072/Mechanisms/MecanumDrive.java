@@ -23,7 +23,7 @@ public class MecanumDrive implements Mechanism {
     public static final double TICKS_PER_REV = 1120;
     public static final double MAX_RPM = 133.9;
     public static final double WHEEL_DIAM_IN = 4;
-    public static final double TRACK_WIDTH_IN = 18;
+    public static final double TRACK_WIDTH_IN = 12;  // TODO: FOR SIMULATOR
     public static final double MAX_MOTOR_VELOCITY = MAX_RPM * Math.PI * WHEEL_DIAM_IN / SECS_PER_MIN;
 
     public static double MAX_VELOCITY = 30;
