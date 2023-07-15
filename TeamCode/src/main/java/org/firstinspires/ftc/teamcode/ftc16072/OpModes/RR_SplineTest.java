@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode.ftc16072.OpModes;
 
-import com.acmerobotics.roadrunner.drive.DriveSignal;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -13,7 +11,7 @@ import org.firstinspires.ftc.teamcode.ftc16072.Robot;
 
 
 @Autonomous
-public class RoadRunnerTest extends OpMode {
+public class RR_SplineTest extends OpMode {
 
     Robot robot = new Robot();
 
@@ -27,6 +25,7 @@ public class RoadRunnerTest extends OpMode {
 
     @Override
     public void init() {
+        robot.makeDriveOnly();
         robot.init(hardwareMap);
         clock = NanoClock.system();
     }

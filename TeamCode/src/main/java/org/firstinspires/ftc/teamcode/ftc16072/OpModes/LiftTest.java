@@ -19,7 +19,7 @@ public class LiftTest extends OpMode {
     public void init() {
         robot.init(hardwareMap);
         dashboard = FtcDashboard.getInstance();
-        telemetry = dashboard.getTelemetry();
+        //telemetry = dashboard.getTelemetry();
     }
 
     @Override

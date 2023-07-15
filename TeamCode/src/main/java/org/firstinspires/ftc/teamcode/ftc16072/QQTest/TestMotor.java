@@ -16,7 +16,7 @@ public class TestMotor extends QQtest {
         this.motor = motor;
     }
 
-
+    @Override
     public void run(boolean on, Telemetry telemetry){
         if (on){
             motor.setPower(speed);
