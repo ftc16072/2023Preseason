@@ -25,11 +25,29 @@ public class ParkAuto extends BaseAuto{
                 );
     }
 
+    QQAction driveToZoneTwo(Pose2d startPose){
+        return new DriveActionRR(
+                robot.nav.trajectoryBuilder(startPose, false).
+                        lineToConstantHeading(new Vector2d(-36, 30)).build(), "first move");
+
+    }
+
+    QQAction driveToZoneThree(Pose2d startPose){
+        return new DriveActionRR(
+                robot.nav.trajectoryBuilder(startPose, false).
+                        lineToConstantHeading(new Vector2d(-36, 38)).build(), "first move")
+                .append(new DriveActionRR(
+                        robot.nav.trajectoryBuilder(new Pose2d(-36, 38, startPose.getHeading()), false).
+                                lineToConstantHeading(new Vector2d(-12, 38)).build(), "second move")
+                );
+    }
+
+
     @Override
     QQAction setUpAction() {
         Pose2d startPose = new Pose2d(-36,65,Math.toRadians(270)); //0,0 blue terminal on blue alliance side
         robot.nav.setPoseEstimate(startPose);
 
-        return driveToZoneOne(startPose);
+        return driveToZoneThree(startPose);
     }
 }
