@@ -24,4 +24,9 @@ public class ClawAction extends QQAction {
         }
         return nextAction;
     }
+
+    @Override
+    String getDebugString() {
+        return "Claw: " + action;
+    }
 }

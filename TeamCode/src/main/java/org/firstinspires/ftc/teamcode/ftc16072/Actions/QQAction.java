@@ -18,5 +18,6 @@ public abstract class QQAction {
             return next;
         }
     }
+    abstract String getDebugString();
 
 }

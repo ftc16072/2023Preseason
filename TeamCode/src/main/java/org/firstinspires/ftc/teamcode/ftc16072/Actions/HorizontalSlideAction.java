@@ -16,4 +16,9 @@ public class HorizontalSlideAction extends QQAction {
         robot.horizontalSlides.goToPosition(position);
         return nextAction;
     }
+
+    @Override
+    String getDebugString() {
+        return "Horizontal position:" + position;
+    }
 }

@@ -17,4 +17,9 @@ public class VerticalSlidesAction extends QQAction {
         robot.lift.liftToPosition(Lift.Position.INTAKE_POSITION);
         return nextAction;
     }
+
+    @Override
+    String getDebugString() {
+        return "vertical desired position" + position;
+    }
 }

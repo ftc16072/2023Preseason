@@ -20,4 +20,9 @@ public class DelayAction extends QQAction{
         }
         return this;
     }
+
+    @Override
+    String getDebugString() {
+        return "delay:" + seconds;
+    }
 }
