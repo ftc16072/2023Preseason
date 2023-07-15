@@ -14,7 +14,7 @@ public class VerticalSlidesAction extends QQAction {
 
     @Override
     QQAction run(OpMode opMode, Robot robot) {
-        robot.lift.liftToPosition(Lift.Position.INTAKE_POSITION);
+        robot.lift.liftToPosition(position);
         return nextAction;
     }
 
