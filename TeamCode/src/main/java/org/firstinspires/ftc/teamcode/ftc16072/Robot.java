@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.ftc16072;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.Claw;
 import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.Gyro;
@@ -32,9 +33,9 @@ public class Robot {
         mecanumDrive = new MecanumDrive();
         lift = new Lift();
         horizontalSlides = new HorizontalSlides();
-        rightPod = new OdometryPod("enc_right", false,0,6, DistanceUnit.INCH);
-        leftPod = new OdometryPod("enc_left",true,0,-6, DistanceUnit.INCH);
-        middlePod = new OdometryPod("enc_x", true,0,0, DistanceUnit.INCH);
+        rightPod = new OdometryPod("enc_right", false,0,-6, DistanceUnit.INCH);
+        leftPod = new OdometryPod("enc_left",true,0,6, DistanceUnit.INCH);
+        middlePod = new OdometryPod("enc_x", false,0,0, DistanceUnit.INCH, 90, AngleUnit.DEGREES);
         nav = new Navigation(gyro, mecanumDrive, rightPod, leftPod, middlePod);
 
         mechanisms = Arrays.asList(

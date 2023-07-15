@@ -3,12 +3,11 @@ package org.firstinspires.ftc.teamcode.ftc16072.Util;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
-import com.acmerobotics.roadrunner.control.PIDFController;
 import com.acmerobotics.roadrunner.drive.DriveSignal;
 import com.acmerobotics.roadrunner.followers.HolonomicPIDVAFollower;
 import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.trajectory.constraints.AngularVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
@@ -18,6 +17,7 @@ import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityCons
 import com.acmerobotics.roadrunner.trajectory.constraints.TranslationalVelocityConstraint;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.Gyro;
 import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.MecanumDrive;
 import org.firstinspires.ftc.teamcode.ftc16072.Mechanisms.OdometryPod;
@@ -40,20 +40,50 @@ public class Navigation extends com.acmerobotics.roadrunner.drive.MecanumDrive{
             new TranslationalVelocityConstraint(MecanumDrive.MAX_VELOCITY)
     ));
     public TrajectoryAccelerationConstraint accelConstraint = new ProfileAccelerationConstraint(MecanumDrive.MAX_ACCELERATION);
-    private PIDFController turnController;
+
     public TrajectoryFollower follower;
+
+    class QQTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer{
+        OdometryPod leftPod;
+        OdometryPod rightPod;
+        OdometryPod middlePod;
+        public QQTrackingWheelLocalizer(OdometryPod left, OdometryPod right, OdometryPod middle){
+            super(Arrays.asList(
+                    left.getPose(), right.getPose(), middle.getPose()
+            ));
+            leftPod = left;
+            rightPod = right;
+            middlePod = middle;
+        }
+        @NonNull
+        @Override
+        public List<Double> getWheelPositions() {
+            return Arrays.asList(
+                    leftPod.getEncoderDistance(DistanceUnit.INCH),
+                    rightPod.getEncoderDistance(DistanceUnit.INCH),
+                    middlePod.getEncoderDistance(DistanceUnit.INCH));
+        }
+
+        @NonNull
+        @Override
+        public List<Double> getWheelVelocities() {
+            return Arrays.asList(
+                    leftPod.getEncoderVelocity(DistanceUnit.INCH),
+                    rightPod.getEncoderVelocity(DistanceUnit.INCH),
+                    middlePod.getEncoderVelocity(DistanceUnit.INCH));
+        }
+    }
 
 
     public Navigation(Gyro gyro, MecanumDrive mecanumDrive, OdometryPod right,OdometryPod left,OdometryPod middle){
-        super(kV,kA,kStatic,mecanumDrive.TRACK_WIDTH_IN);
+        super(kV,kA,kStatic,MecanumDrive.TRACK_WIDTH_IN);
+
         this.gyro = gyro;
         this.mecanumDrive = mecanumDrive;
 
-        turnController = new PIDFController(HEADING_PID);
-        turnController.setInputBounds(0,2 * Math.PI);
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID,HEADING_PID,
                 new Pose2d(0.5,0.5,Math.toRadians(5.0)),0.5);
-
+        setLocalizer(new QQTrackingWheelLocalizer(left, right, middle));
     }
 
     public void fieldRelative(double forward, double right, double rotate){
@@ -85,6 +115,7 @@ public class Navigation extends com.acmerobotics.roadrunner.drive.MecanumDrive{
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose, Boolean reversed){
         return new TrajectoryBuilder(startPose, reversed, velocityConstraint, accelConstraint);
     }
+
     public boolean isDoneFollowing(Pose2d currentPose){
         setDriveSignal(follower.update(currentPose));
         if(!follower.isFollowing()){
@@ -93,5 +124,4 @@ public class Navigation extends com.acmerobotics.roadrunner.drive.MecanumDrive{
         }
         return false;
     }
-
 }
