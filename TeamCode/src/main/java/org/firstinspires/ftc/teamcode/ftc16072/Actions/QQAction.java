@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.ftc16072.Robot;
 public abstract class QQAction {
     QQAction nextAction;
 
-    abstract QQAction run(OpMode opMode, Robot robot);
+    public abstract QQAction run(OpMode opMode, Robot robot);
 
     QQAction append(QQAction next){
         if(nextAction != null){
@@ -18,6 +18,6 @@ public abstract class QQAction {
             return next;
         }
     }
-    abstract String getDebugString();
+    public abstract String getDebugString();
 
 }

@@ -7,11 +7,11 @@ import org.firstinspires.ftc.teamcode.ftc16072.Robot;
 public class DelayAction extends QQAction{
     double delayTill;
     double seconds;
-    DelayAction(double seconds){
+    public DelayAction(double seconds){
         this.seconds = seconds;
     }
     @Override
-    QQAction run(OpMode opMode, Robot robot) {
+    public QQAction run(OpMode opMode, Robot robot) {
         if(delayTill == 0){
             delayTill = opMode.time + seconds;
         }
@@ -22,7 +22,7 @@ public class DelayAction extends QQAction{
     }
 
     @Override
-    String getDebugString() {
+    public String getDebugString() {
         return "delay:" + seconds;
     }
 }

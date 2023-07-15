@@ -7,18 +7,18 @@ import org.firstinspires.ftc.teamcode.ftc16072.Robot;
 
 public class HorizontalSlideAction extends QQAction {
     HorizontalSlides.Position position;
-   HorizontalSlideAction(HorizontalSlides.Position position){
+   public HorizontalSlideAction(HorizontalSlides.Position position){
        this.position = position;
    }
 
     @Override
-    QQAction run(OpMode opMode, Robot robot) {
+    public QQAction run(OpMode opMode, Robot robot) {
         robot.horizontalSlides.goToPosition(position);
         return nextAction;
     }
 
     @Override
-    String getDebugString() {
+    public String getDebugString() {
         return "Horizontal position:" + position;
     }
 }

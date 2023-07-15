@@ -11,11 +11,11 @@ public class ClawAction extends QQAction {
     }
     Claw action;
 
-    ClawAction(Claw action){
+    public ClawAction(Claw action){
         this.action = action;
     }
     @Override
-    QQAction run(OpMode opMode, Robot robot) {
+    public QQAction run(OpMode opMode, Robot robot) {
         if(action == Claw.OPEN){
             robot.claw.manualOpen();
         }
@@ -26,7 +26,7 @@ public class ClawAction extends QQAction {
     }
 
     @Override
-    String getDebugString() {
+    public String getDebugString() {
         return "Claw: " + action;
     }
 }
