@@ -80,7 +80,7 @@ public class Lift implements Mechanism {
         limitSwitch = hwMap.get(DigitalChannel.class, "lift_switch");
         limitSwitch.setMode(DigitalChannel.Mode.INPUT);
 
-        desiredPosition = LIFT_POSITION_GROUND;
+        desiredPosition = LIFT_POSITION_INTAKE;
         fillPositions();
         timer.reset();
     }
