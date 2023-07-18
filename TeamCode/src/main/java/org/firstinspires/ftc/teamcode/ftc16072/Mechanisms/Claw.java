@@ -16,7 +16,7 @@ public class Claw implements Mechanism{
     public static final int AUTO_GRAB_RANGE_INCHES = 3;
     public Servo claw;
     private ColorRangeSensor sensor;
-    public static double GRIPPED_SERVO_POSITION = 0.05;
+    public static double GRIPPED_SERVO_POSITION = 0.10;
     public static double RELEASED_SERVO_POSITION = 0.30;
 
     public enum TeamColor {
