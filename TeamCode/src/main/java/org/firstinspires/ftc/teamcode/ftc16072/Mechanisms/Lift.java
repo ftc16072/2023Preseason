@@ -142,12 +142,14 @@ public class Lift implements Mechanism {
     public double PID(double destination, double position){ // does all of the PID math
         double result;
         double error = destination-position;
-        if(Math.signum(error) != Math.signum(integralSum)){
+        /*if(Math.signum(error) != Math.signum(integralSum)){
            integralSum = 0;
         }
         else{
            integralSum += error * timer.seconds();
         }
+
+
 
         if(integralSum * K_I > MAX_MOTOR_SPEED){
             integralSum = MAX_MOTOR_SPEED / K_I;
@@ -156,11 +158,13 @@ public class Lift implements Mechanism {
             integralSum = -MAX_MOTOR_SPEED / K_I;
         }
 
+
+         */
         double derivative = (error - lastError)/timer.seconds();
         lastError = error;
 
         timer.reset();
-        result = (error * K_P) + (integralSum * K_I) + (derivative * K_D);
+        result = (error * K_P) + (derivative * K_D);
         if (desiredPosition > LIFT_POSITION_REST){
             return result + GRAVITY_CONSTANT;
         } else {

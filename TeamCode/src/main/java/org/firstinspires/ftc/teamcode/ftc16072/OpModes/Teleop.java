@@ -64,7 +64,11 @@ public class Teleop extends OpMode {
         } else if (gamepad2.left_trigger > 0.4){
             robot.claw.manualClose();
         }
-        robot.claw.autograb();
+        if (!(gamepad2.right_trigger >0.4)) {
+            robot.claw.autograb();
+        }
+
+
 
 
         robot.nav.fieldRelative(-gamepad1.left_stick_y,
@@ -73,7 +77,7 @@ public class Teleop extends OpMode {
 
         robot.lift.update(telemetry); // needed for pid
         telemetry.addData("horizontal", robot.horizontalSlides.isSafe());
-        telemetry.addData("lift", robot.lift.isSafeTelemetry(telemetry));
+        telemetry.addData("lift", robot.lift.currentPosition());
         telemetry.addData("limit switch", robot.lift.limitSwitch.getState());
 
     }
