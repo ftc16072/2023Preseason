@@ -52,7 +52,6 @@ public class Lift implements Mechanism {
     final static double MAX_MOTOR_SPEED = 1.0;
 
     double desiredPosition;
-    double currentPosition;
 
     Hashtable<Position, Integer> positions = new Hashtable<>();
     private double lastError=0;
@@ -81,7 +80,7 @@ public class Lift implements Mechanism {
         limitSwitch = hwMap.get(DigitalChannel.class, "lift_switch");
         limitSwitch.setMode(DigitalChannel.Mode.INPUT);
 
-        desiredPosition = LIFT_POSITION_GROUND;
+        desiredPosition = LIFT_POSITION_INTAKE;
         fillPositions();
         timer.reset();
     }
@@ -143,12 +142,14 @@ public class Lift implements Mechanism {
     public double PID(double destination, double position){ // does all of the PID math
         double result;
         double error = destination-position;
-        if(Math.signum(error) != Math.signum(integralSum)){
+        /*if(Math.signum(error) != Math.signum(integralSum)){
            integralSum = 0;
         }
         else{
            integralSum += error * timer.seconds();
         }
+
+
 
         if(integralSum * K_I > MAX_MOTOR_SPEED){
             integralSum = MAX_MOTOR_SPEED / K_I;
@@ -157,11 +158,13 @@ public class Lift implements Mechanism {
             integralSum = -MAX_MOTOR_SPEED / K_I;
         }
 
+
+         */
         double derivative = (error - lastError)/timer.seconds();
         lastError = error;
 
         timer.reset();
-        result = (error * K_P) + (integralSum * K_I) + (derivative * K_D);
+        result = (error * K_P) + (derivative * K_D);
         if (desiredPosition > LIFT_POSITION_REST){
             return result + GRAVITY_CONSTANT;
         } else {
@@ -169,8 +172,13 @@ public class Lift implements Mechanism {
         }
     }
 
+    public boolean isSafeTelemetry(Telemetry telemetry){
+        telemetry.addData("current position", currentPosition());
+        telemetry.addData("compare", LIFT_POSITION_GROUND);
+        return isSafe();
+    }
     public boolean isSafe(){
-        return (currentPosition >= LIFT_POSITION_GROUND);
+        return (currentPosition() >= LIFT_POSITION_GROUND);
     }
 
     public double currentPosition(){

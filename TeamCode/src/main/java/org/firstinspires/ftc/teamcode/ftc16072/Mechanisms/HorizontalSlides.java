@@ -22,7 +22,7 @@ public class HorizontalSlides implements Mechanism{
     public Servo slideServo;
     public final double BACK_SERVO_POSITION = 0.473; // preset values need to be tuned
     public final double MIDDLE_SERVO_POSITION = 0.78;
-    public final double FRONT_SERVO_POSITION = 1;
+    public final double FRONT_SERVO_POSITION = 0.93;
     public final double SAFE_SERVO_POSITION = 0.7;
     public final double MANUAL_CHANGE= 0.001;
 
