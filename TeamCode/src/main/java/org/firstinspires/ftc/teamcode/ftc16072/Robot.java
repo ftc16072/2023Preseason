@@ -33,7 +33,7 @@ public class Robot {
         mecanumDrive = new MecanumDrive();
         lift = new Lift();
         horizontalSlides = new HorizontalSlides();
-        rightPod = new OdometryPod("enc_right", false,0,-6, DistanceUnit.INCH);
+        rightPod = new OdometryPod("right_lift_motor", false,0,-6, DistanceUnit.INCH);
         leftPod = new OdometryPod("enc_left",true,0,6, DistanceUnit.INCH);
         middlePod = new OdometryPod("enc_x", false,0,0, DistanceUnit.INCH, 90, AngleUnit.DEGREES);
         nav = new Navigation(gyro, mecanumDrive, rightPod, leftPod, middlePod);
