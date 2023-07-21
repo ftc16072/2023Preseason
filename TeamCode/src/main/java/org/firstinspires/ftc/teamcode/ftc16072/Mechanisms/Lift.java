@@ -126,6 +126,9 @@ public class Lift implements Mechanism {
         }
 
         power = PID(desiredPosition, currentPosition());
+        if(desiredPosition == 0 && !(currentPosition() == 0)){
+            power = -0.25;
+        }
 
         if (currentPosition() > LIFT_POSITION_SAFETY){ // lift cap for safety
             rightLiftMotor.setPower(0);
