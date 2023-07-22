@@ -127,7 +127,7 @@ public class Lift implements Mechanism {
 
         power = PID(desiredPosition, currentPosition());
         if(desiredPosition == 0 && !(currentPosition() == 0)){
-            power = -0.25;
+            power = -0.3;
         }
 
         if (currentPosition() > LIFT_POSITION_SAFETY){ // lift cap for safety
@@ -163,11 +163,8 @@ public class Lift implements Mechanism {
 
 
          */
-        double derivative = (error - lastError)/timer.seconds();
-        lastError = error;
 
-        timer.reset();
-        result = (error * K_P) + (derivative * K_D);
+        result = (error * K_P);
         if (desiredPosition > LIFT_POSITION_REST){
             return result + GRAVITY_CONSTANT;
         } else {
