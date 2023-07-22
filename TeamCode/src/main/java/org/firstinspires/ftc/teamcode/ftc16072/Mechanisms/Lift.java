@@ -41,7 +41,7 @@ public class Lift implements Mechanism {
     //TODO: tune lift preset values
     public static int LIFT_POSITION_SAFETY = 3300;
     public static int LIFT_POSITION_HIGH_POLE = 2400;
-    public static int LIFT_POSITION_MIDDLE_POLE = 2000;
+    public static int LIFT_POSITION_MIDDLE_POLE = 990;
     public static int LIFT_POSITION_LOWEST_POLE = 1800;
     public static int LIFT_POSITION_GROUND = 200;
     public static int LIFT_POSITION_REST = 70;
